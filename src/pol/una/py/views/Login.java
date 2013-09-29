@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import pol.una.py.views.menu.MenuInput;
+
 /**
  * Representa la interfaz de login para el ingreso a la aplicación
  * 
@@ -73,7 +75,8 @@ public class Login {
 						&& validatePassword(passwordText.getPassword())) {
 					message.setVisible(false);
 					windows.setVisible(false);
-					MenuPrincipal.build();
+					MenuInput menu = new MenuInput();
+					menu.build();
 				} else {
 					message.setVisible(true);
 				}
@@ -81,7 +84,6 @@ public class Login {
 			}
 		};
 		loginButton.addActionListener(action);
-		;
 		panel.add(loginButton, BorderLayout.CENTER);
 
 		windows.setVisible(true);

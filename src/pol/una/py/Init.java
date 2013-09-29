@@ -1,6 +1,6 @@
 package pol.una.py;
 
-import pol.una.py.views.Login;
+import pol.una.py.views.menu.MenuInput;
 
 /**
  * Punto de entrada a la aplicación
@@ -12,7 +12,9 @@ import pol.una.py.views.Login;
  */
 public class Init {
 	public static void main(String[] args) {
-		Login.call();
+//		Login.call();
+		MenuInput menu = new MenuInput();
+		menu.build();
 
 	}
 }
