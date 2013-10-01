@@ -1,4 +1,4 @@
-package pol.una.py.model;
+package pol.una.py.model.base;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Alfabeto {
 	private String name;
-	private List<String> language;
+	private List<String> simbolos;
 
 	public void setName(String name) {
 		this.name = name;
@@ -22,11 +22,11 @@ public class Alfabeto {
 		return name;
 	}
 
-	public void setLanguage(List<String> language) {
-		this.language = language;
+	public void setSimbolos(List<String> simbolos) {
+		this.simbolos = simbolos;
 	}
 
-	public List<String> getLanguage() {
-		return language;
+	public List<String> getSimbolos() {
+		return simbolos;
 	}
 }
