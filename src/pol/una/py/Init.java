@@ -38,7 +38,7 @@ public class Init {
 		HashMap<String, Alfabeto> alfabetos2 = new HashMap<>();
 		alfabetos2.put("digito", alfabeto1);
 
-		ExpresionRegular expresion1 = new ExpresionRegular("((((a|c)*))?)");
+		ExpresionRegular expresion1 = new ExpresionRegular("((((a|c)*))a)");
 
 		ProduccionBNF produccion1 = new ProduccionBNF("identificador",
 				expresion1);

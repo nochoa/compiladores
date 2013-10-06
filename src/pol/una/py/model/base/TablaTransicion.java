@@ -40,6 +40,12 @@ public class TablaTransicion {
 		}
 	}
 
+	public void addSimbolEmpty() {
+		if (!simbolos.contains("ε")) {
+			simbolos.add("ε");
+		}
+	}
+
 	public List<Estado> getEstados() {
 		return estados;
 	}

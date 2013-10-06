@@ -20,6 +20,6 @@ public class ParentesisIzquierdoNoEncontrado extends AnalizadorLexicoException {
 	}
 
 	public ParentesisIzquierdoNoEncontrado() {
-		super("Se experaba '(' ");
+		super("Se esperaba '(' ");
 	}
 }

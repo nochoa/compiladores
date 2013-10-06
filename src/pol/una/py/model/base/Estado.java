@@ -91,7 +91,7 @@ public class Estado {
 		if (transiciones == null) {
 			transiciones = new ArrayList<>();
 		}
-		transiciones.add(transicion);
+		this.transiciones.add(transicion);
 	}
 
 	public void setTransiciones(List<Transicion> transiciones) {
