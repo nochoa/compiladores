@@ -1,5 +1,6 @@
 package pol.una.py.model.base;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,15 +12,32 @@ import java.util.List;
  * 
  */
 public class Alfabeto {
-	private String name;
 	private List<String> simbolos;
 
-	public void setName(String name) {
-		this.name = name;
+	/**
+	 * @param simbolos
+	 *            Caracteres que pertenecen al alfabeto
+	 */
+	public Alfabeto(List<String> simbolos) {
+		super();
+		this.simbolos = simbolos;
 	}
 
-	public String getName() {
-		return name;
+	public Alfabeto(String stream) {
+		this.simbolos = Arrays.asList(stream.substring(1, stream.length() - 1)
+				.split(","));
+
+	}
+
+	/**
+	 * Valida si una cadena pertenece al alfabeto
+	 * 
+	 * @param value
+	 *            Valor que se desea validar
+	 * @return
+	 */
+	public boolean pertenece(String value) {
+		return simbolos.contains(value);
 	}
 
 	public void setSimbolos(List<String> simbolos) {
@@ -29,4 +47,19 @@ public class Alfabeto {
 	public List<String> getSimbolos() {
 		return simbolos;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		for (String symbol : simbolos) {
+			sb.append(symbol);
+			sb.append(",");
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("}");
+
+		return sb.toString();
+	}
+
 }

@@ -1,7 +1,11 @@
 package pol.una.py.model.base;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Representa una tabla de transiciones
+ * Representa una tabla de transiciones.
  * 
  * @author Nathalia Ochoa
  * @since 1.0
@@ -9,36 +13,71 @@ package pol.una.py.model.base;
  * 
  */
 public class TablaTransicion {
-	private Estado[] estados;
-	private String[] simbolos;
+	private List<Estado> estados;
+	private List<String> simbolos;
+
+	public TablaTransicion() {
+		estados = new ArrayList<Estado>();
+		simbolos = new ArrayList<String>();
+	}
 
 	/**
-	 * Crea una tabla de transiciones
+	 * Agrega un estado a la tabla de transiciones.
 	 * 
-	 * @param cantEstados
-	 *            Cantidad de estados
-	 * @param cantSimbolos
-	 *            Cantidad de simbolos
+	 * @param estado
+	 *            Estado a agregar.
 	 */
-	public TablaTransicion(int cantEstados, int cantSimbolos) {
-		estados = new Estado[cantEstados];
-		simbolos = new String[cantSimbolos];
+	public void addEstado(Estado estado) {
+		estados.add(estado);
+		addSimbolos(estado);
 	}
 
-	public String[] getSimbolos() {
-		return simbolos;
+	public void addSimbolos(Estado estado) {
+		for (Transicion transicion : estado.getTransiciones()) {
+			if (!simbolos.contains(transicion.getSimbolo())) {
+				simbolos.add(transicion.getSimbolo());
+			}
+		}
 	}
 
-	public void setSimbolos(String[] simbolos) {
-		this.simbolos = simbolos;
-	}
-
-	public Estado[] getEstados() {
+	public List<Estado> getEstados() {
 		return estados;
 	}
 
-	public void setEstados(Estado[] estados) {
+	public void setEstados(List<Estado> estados) {
 		this.estados = estados;
+	}
+
+	public List<String> getSimbolos() {
+		return simbolos;
+	}
+
+	public void setSimbolos(List<String> simbolos) {
+		this.simbolos = simbolos;
+	}
+
+	/**
+	 * Imprision de la tabla de transiciones.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("----------Tabla de transiciones----------");
+		sb.append("\n");
+		sb.append("Estado - Transiciones \n");
+		Collections.sort(estados, new Comparable());
+		for (Estado estado : estados) {
+			sb.append("  " + estado.getValue() + "    - ");
+			for (String simbolo : simbolos) {
+				for (Estado alcanzable : estado.getEstadosBySimbol(simbolo)) {
+					sb.append("(" + simbolo + ")" + alcanzable.getValue());
+				}
+			}
+
+			sb.append("\n");
+
+		}
+		return sb.toString();
 	}
 
 }
