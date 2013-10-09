@@ -44,7 +44,7 @@ public class Thompson extends AFN {
 		this.getTabla().addEstado(destino);
 	}
 
-	public void OR(Thompson thompson) {
+	public void or(Thompson thompson) {
 		Estado newInicial = new Estado(0);
 		Estado newFinal = new Estado(this.size() + thompson.size() + 1);
 
@@ -73,7 +73,7 @@ public class Thompson extends AFN {
 
 	}
 
-	public void CONCATENATE(Thompson thompson) {
+	public void concatenate(Thompson thompson) {
 		// Si la cadena vacia aun no esta en la lista de simbolos la agregamos.
 		// Esto es debido a que los simbolos se agregan cuando de agrega un
 		// estado pero en esta operacion no se agrega ningun estado.
@@ -93,7 +93,7 @@ public class Thompson extends AFN {
 
 	}
 
-	public void CERRADURA_KLEENE() {
+	public void cerradura_kleene() {
 		Estado newInicial = new Estado(0);
 		Estado newFinal = new Estado(this.size() + 1);
 
@@ -120,7 +120,7 @@ public class Thompson extends AFN {
 
 	}
 
-	public void CERRADURA_KLEENE_POSITIVE() {
+	public void cerradura_kleene_positive() {
 		Estado newInicial = new Estado(0);
 		Estado newFinal = new Estado(this.size() + 1);
 
@@ -144,7 +144,7 @@ public class Thompson extends AFN {
 
 	}
 
-	public void ALTERNATIVE() {
+	public void alternative() {
 		Estado newInicial = new Estado(0);
 		Estado newFinal = new Estado(this.size() + 1);
 
