@@ -1,6 +1,5 @@
 package pol.una.py.model.lexico;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class BNF {
 	 *            Lista de alfabetos
 	 */
 	public BNF(String name, List<ProduccionBNF> producciones,
-			HashMap<String, Alfabeto> alfabetos) {
+			Map<String, Alfabeto> alfabetos) {
 		super();
 		this.name = name;
 		this.producciones = producciones;
@@ -74,12 +73,7 @@ public class BNF {
 
 		} else {
 			// Si no la validacion se realiza por cada alfabeto asociado.
-			for (Map.Entry<String, Alfabeto> entry : alfabetos.entrySet()) {
-				if (entry.getKey().equals(value)) {
-					return true;
-				}
-			}
-			return false;
+			return alfabetos.containsKey(value);
 
 		}
 

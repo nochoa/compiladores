@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pol.una.py.model.lexico;
 
 import java.util.Map;
@@ -13,8 +10,15 @@ import pol.una.py.excepciones.lexico.ParentesisIzquierdoNoEncontrado;
 import pol.una.py.model.base.Alfabeto;
 
 /**
- * Analizador que recibe una produccion y genera el AFN resultante aplicando la
- * contrucción de Thompson.
+ * Analizador que recibe una producción y genera el AFN resultante aplicando la
+ * contrucción de Thompson. Se basa en el siguiente BNF para definir un lenguaje
+ * de expresiones regulares.</br>
+ * 
+ * 1: expresion -> simple concatenate </br> 2: concatenate -> “|” simple
+ * concatenate| Є </br> 3: simple -> basico t </br> 4: t -> basico t | Є </br>
+ * 5: basico -> list op </br> 6: operacion -> * | + | ? | Є </br> 7: list ->
+ * grupo |fin </br> 8: agrupacion -> “(” expresion “)” </br> 9: final ->
+ * [alfabeto] </br>
  * 
  * @author Nathalia Ochoa
  * 
@@ -28,10 +32,10 @@ public class AnalizadorLexico {
 	private Token preAnalisis;
 
 	/**
-	 * Crea un analizador lexico para una determinada produccion.
+	 * Crea un analizador léxico para una determinada producción.
 	 * 
-	 * @param produccion
-	 *            Produccion la cual se desea generar el AFN
+	 * @param producción
+	 *            producción la cual se desea generar el AFN
 	 */
 	public AnalizadorLexico(ProduccionBNF produccion,
 			Map<String, Alfabeto> alfabetos) {
@@ -61,81 +65,129 @@ public class AnalizadorLexico {
 	public Thompson go() throws ExpresionRegularMalFormada, MatchingFailure,
 			ParentesisDerechoNoEncontrado, ParentesisIzquierdoNoEncontrado {
 
-		this.thompson = primeraProduccion();
+		this.thompson = expresion();
 
 		if (!preAnalisis.getTipo().equals(TipoToken.FIN)) {
 			throw new ExpresionRegularMalFormada(preAnalisis.getValue());
 		}
+		thompson.getEstadoFinal().setAceptacion(true);
 		return thompson;
 	}
 
-	private Thompson primeraProduccion() throws MatchingFailure,
+	/**
+	 * <b>Primera producción:</b> Analizador inicial de la expresion regular,
+	 * punto de entrada para analizar las distintas operaciones o estructuras
+	 * que pueden ser representadas en la expresion.
+	 * 
+	 * @return
+	 * @throws MatchingFailure
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 */
+	private Thompson expresion() throws MatchingFailure,
 			ParentesisDerechoNoEncontrado, ParentesisIzquierdoNoEncontrado {
 
 		Thompson automata1 = null, automata2;
 
-		automata1 = this.terceraProduccion();
-		automata2 = this.segundaProduccion();
+		automata1 = this.procesarExpresion();
+		automata2 = this.concatenate();
 		if (automata2 != null) {
-			automata1.OR(automata2);
+			automata1.or(automata2);
 		}
 
 		automata1.setProduccion(produccion);
 		return automata1;
 	}
 
-	private Thompson segundaProduccion() throws MatchingFailure,
+	/**
+	 * <b>Segunda producción:</b>producción recursiva que permite analizar las
+	 * expresiones que poseen el operador "|" que representa la operacion de
+	 * concatenacion.
+	 * 
+	 * @return
+	 * @throws MatchingFailure
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 */
+	private Thompson concatenate() throws MatchingFailure,
 			ParentesisDerechoNoEncontrado, ParentesisIzquierdoNoEncontrado {
 
 		Token or = new Token("|");
 		if (preAnalisis.isEquals(or)) {
 			this.match("|");
-			return primeraProduccion();
+			return expresion();
 		} else {
 			return null;
 		}
 
 	}
 
-	private Thompson terceraProduccion() throws MatchingFailure,
+	/**
+	 * <b>Tercera producción:</b> Verifica la estructura de preanalisis actual,
+	 * la cual puede ser final de la expresion, una de las operaciones
+	 * permitidas (+,* o ?) o una expresion agrupada entre parentesis.
+	 * 
+	 * @return
+	 * @throws MatchingFailure
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 */
+	private Thompson procesarExpresion() throws MatchingFailure,
 			ParentesisDerechoNoEncontrado, ParentesisIzquierdoNoEncontrado {
 
-		Thompson automata1 = this.quintaProduccion();
-		Thompson automata2 = this.cuartaProduccion();
+		Thompson automata1 = this.procesarOperacion();
+		Thompson automata2 = this.procesarExpresionSiguiente();
 		if (automata2 != null) {
-			automata1.CONCATENATE(automata2);
+			automata1.concatenate(automata2);
 		}
 
 		return automata1;
 	}
 
-	private Thompson cuartaProduccion() throws MatchingFailure,
+	/**
+	 * <b>Cuarta producción:</b> Permite el analisis recursivo de la expresion.
+	 * 
+	 * @return
+	 * @throws MatchingFailure
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 */
+	private Thompson procesarExpresionSiguiente() throws MatchingFailure,
 			ParentesisDerechoNoEncontrado, ParentesisIzquierdoNoEncontrado {
 
 		String current = preAnalisis.getValue();
 		Thompson result = null;
 		if ((preAnalisis.getTipo() != TipoToken.FIN) && helper.isValid(current)
 				|| current.equals("(")) {
-			result = terceraProduccion();
+			result = procesarExpresion();
 		}
 		return result;
 	}
 
-	private Thompson quintaProduccion() throws MatchingFailure,
+	/**
+	 * <b>Quinta producción:</b> De acuerdo a la operacion asociada a
+	 * preanalisis, invoca a la correspondiente contruccion de Thompson.
+	 * 
+	 * @return
+	 * @throws MatchingFailure
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 */
+	private Thompson procesarOperacion() throws MatchingFailure,
 			ParentesisDerechoNoEncontrado, ParentesisIzquierdoNoEncontrado {
-		Thompson automata1 = septimaProduccion();
+		Thompson automata1 = checkAgrupacionOrFin();
 
 		if (automata1 != null) {
-			char operator = sextaProduccion();
+			char operator = operacion();
 			switch (operator) {
 			case '*':
-				automata1.CERRADURA_KLEENE();
+				automata1.cerradura_kleene();
 				break;
 			case '+':
-				automata1.CERRADURA_KLEENE_POSITIVE();
+				automata1.cerradura_kleene_positive();
 				break;
 			case '?':
-				automata1.ALTERNATIVE();
+				automata1.alternative();
 				break;
 			case 'E':
 				break;
@@ -144,7 +196,14 @@ public class AnalizadorLexico {
 		return automata1;
 	}
 
-	private char sextaProduccion() throws MatchingFailure {
+	/**
+	 * <b>Sexta producción:</b>Obtiene la operacion asociada al token actual, es
+	 * decir el siguiente token, las operaciones posibles son: * | + | ?
+	 * 
+	 * @return Operacion.
+	 * @throws MatchingFailure
+	 */
+	private char operacion() throws MatchingFailure {
 		char operador = 'E';
 
 		if (preAnalisis.getValue().compareTo("") != 0) {
@@ -167,30 +226,57 @@ public class AnalizadorLexico {
 		return operador;
 	}
 
-	private Thompson septimaProduccion() throws ParentesisDerechoNoEncontrado,
+	/**
+	 * <b>Septima producción:</b>Verifica si preanalisis se corresponde con una
+	 * expresion entre parentesis o si es el fin de la expresion.
+	 * 
+	 * @return
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 * @throws MatchingFailure
+	 */
+	private Thompson checkAgrupacionOrFin()
+			throws ParentesisDerechoNoEncontrado,
 			ParentesisIzquierdoNoEncontrado, MatchingFailure {
 
 		Token grupofirst = new Token("(");
 
 		if (preAnalisis.isEquals(grupofirst)) {
-			return this.octavaProduccion();
+			return this.agrupacion();
 		} else {
-			return this.novenaProduccion();
+			return this.checkFin();
 		}
 	}
 
-	private Thompson octavaProduccion() throws ParentesisDerechoNoEncontrado,
+	/**
+	 * <b>Octava producción:</b>Analiza una expresion que esta agrupada entre
+	 * parentesis.
+	 * 
+	 * @return
+	 * @throws ParentesisDerechoNoEncontrado
+	 * @throws ParentesisIzquierdoNoEncontrado
+	 * @throws MatchingFailure
+	 */
+	private Thompson agrupacion() throws ParentesisDerechoNoEncontrado,
 			ParentesisIzquierdoNoEncontrado, MatchingFailure {
 		this.match("(");
 
-		Thompson Aux1 = primeraProduccion();
+		Thompson Aux1 = expresion();
 
 		this.match(")");
 
 		return Aux1;
 	}
 
-	private Thompson novenaProduccion() throws MatchingFailure {
+	/**
+	 * <b>Novena producción:</b>Si la expresion se ha analizado totalmente, es
+	 * decir si preanalisis es el fin de la expresion, retorna un automata nulo,
+	 * caso contrario contruye un automata simple y consume el token actual.
+	 * 
+	 * @return
+	 * @throws MatchingFailure
+	 */
+	private Thompson checkFin() throws MatchingFailure {
 		Thompson nuevo = null;
 
 		if (preAnalisis.getTipo() != TipoToken.FIN) {

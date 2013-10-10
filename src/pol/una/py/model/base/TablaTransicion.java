@@ -47,6 +47,7 @@ public class TablaTransicion {
 	}
 
 	public List<Estado> getEstados() {
+		Collections.sort(estados, new Comparable());
 		return estados;
 	}
 
@@ -74,14 +75,11 @@ public class TablaTransicion {
 		Collections.sort(estados, new Comparable());
 		for (Estado estado : estados) {
 			sb.append("  " + estado.getValue() + "    - ");
-			for (String simbolo : simbolos) {
-				for (Estado alcanzable : estado.getEstadosBySimbol(simbolo)) {
-					sb.append("(" + simbolo + ")" + alcanzable.getValue());
-				}
+			for (Transicion transicion : estado.getTransiciones()) {
+				sb.append("(" + transicion.getSimbolo() + ")"
+						+ transicion.getDestino().getValue());
 			}
-
 			sb.append("\n");
-
 		}
 		return sb.toString();
 	}

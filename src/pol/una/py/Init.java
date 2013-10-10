@@ -3,6 +3,7 @@ package pol.una.py;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
 import pol.una.py.model.base.Alfabeto;
@@ -11,6 +12,7 @@ import pol.una.py.model.lexico.BNF;
 import pol.una.py.model.lexico.ExpresionRegular;
 import pol.una.py.model.lexico.ProduccionBNF;
 import pol.una.py.model.lexico.Thompson;
+import pol.una.py.views.grafos.GraphicHelper;
 
 /**
  * Punto de entrada a la aplicación
@@ -31,16 +33,16 @@ public class Init {
 		Alfabeto alfabeto1 = new Alfabeto(DIGITOS);
 		Alfabeto alfabeto2 = new Alfabeto(LETRAS);
 
-		HashMap<String, Alfabeto> alfabetos = new HashMap<>();
+		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
 		alfabetos.put("digito", alfabeto1);
 		alfabetos.put("letra", alfabeto2);
 
-		HashMap<String, Alfabeto> alfabetos2 = new HashMap<>();
+		Map<String, Alfabeto> alfabetos2 = new HashMap<String, Alfabeto>();
 		alfabetos2.put("digito", alfabeto1);
 
 		ExpresionRegular expresion1 = new ExpresionRegular("((((a|c)*))a)");
 
-		ProduccionBNF produccion1 = new ProduccionBNF("identificador",
+		ProduccionBNF produccion1 = new ProduccionBNF("hola","identificador",
 				expresion1);
 
 		List<ProduccionBNF> producciones = new ArrayList<>();
@@ -54,6 +56,8 @@ public class Init {
 		Thompson result = analizar.go();
 		System.out.println(result.toString());
 
+		GraphicHelper graph = new GraphicHelper();
+		graph.graph(result);
 	}
 
 }
