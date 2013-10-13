@@ -10,8 +10,8 @@ import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Transicion;
 
 /**
- * Helper que propociona las funcionalidades necesarias para generar el grafico
- * de un atomata.
+ * Helper que propociona las funcionalidades necesarias para generar el gráfico
+ * de un automata.
  * 
  * @author Nathalia Ochoa
  * 
@@ -25,7 +25,7 @@ public class GraphicHelper {
 	private final static String PNG = ".png";
 
 	/**
-	 * Genera el grafico de un automata finito.
+	 * Genera el gráfico de un automata finito.
 	 * 
 	 * @param automata
 	 */
@@ -44,10 +44,8 @@ public class GraphicHelper {
 	private void paint(AF automata) {
 		try {
 			ProcessBuilder pbuilder;
-			String pathDot = generatePathDot(automata.getProduccion()
-					.getIdentificador());
-			String pathPng = generatePathPng(automata.getProduccion()
-					.getIdentificador());
+			String pathDot = generatePathDot(automata.getProduccion().getName());
+			String pathPng = generatePathPng(automata.getProduccion().getName());
 
 			FileWriter fichero = new FileWriter(pathDot);
 			fichero.write(generateDot(automata));

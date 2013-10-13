@@ -1,6 +1,6 @@
 package pol.una.py.model.lexico;
 
-import pol.una.py.model.automatas.AFN;
+import pol.una.py.model.automatas.AF;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.TablaTransicion;
 import pol.una.py.model.base.Transicion;
@@ -15,7 +15,7 @@ import pol.una.py.model.base.Transicion;
  * @version 1.0 Set 30, 2013
  * 
  */
-public class Thompson extends AFN {
+public class Thompson extends AF {
 	private static final String ε = "ε";
 
 	/**

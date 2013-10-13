@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
+import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.AnalizadorLexico;
 import pol.una.py.model.lexico.BNF;
@@ -30,34 +31,26 @@ public class Init {
 		String DIGITOS = "{0,1,2,3,4,5,6}";
 		String LETRAS = "{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,s}";
 
-		Alfabeto alfabeto1 = new Alfabeto(DIGITOS);
-		Alfabeto alfabeto2 = new Alfabeto(LETRAS);
-
 		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
-		alfabetos.put("digito", alfabeto1);
-		alfabetos.put("letra", alfabeto2);
+		alfabetos.put("digito", new Alfabeto(DIGITOS));
+		alfabetos.put("letra", new Alfabeto(LETRAS));
 
-		Map<String, Alfabeto> alfabetos2 = new HashMap<String, Alfabeto>();
-		alfabetos2.put("digito", alfabeto1);
-
-		ExpresionRegular expresion1 = new ExpresionRegular("((((a|c)*))a)");
-
-		ProduccionBNF produccion1 = new ProduccionBNF("hola","identificador",
-				expresion1);
+		ExpresionRegular expresion1 = new ExpresionRegular(
+				"([letra]|[digito])*");
+		ExpresionRegular expresion2 = new ExpresionRegular("[letra]*");
 
 		List<ProduccionBNF> producciones = new ArrayList<>();
-		producciones.add(produccion1);
-		// producciones.add(produccion2);
+		producciones.add(new ProduccionBNF("identificador", expresion1));
+		producciones.add(new ProduccionBNF("letra", expresion2));
 
-		BNF bnf = new BNF("Prueba", producciones, alfabeto2);
+		BNF bnf = new BNF("Prueba", producciones, alfabetos);
 		System.out.println(bnf.toString());
-		AnalizadorLexico analizar = new AnalizadorLexico(produccion1, alfabeto2);
 
-		Thompson result = analizar.go();
-		System.out.println(result.toString());
+		for (AFN afn : bnf.process()) {
+			System.out.println(afn.toString());
+			afn.paint();
 
-		GraphicHelper graph = new GraphicHelper();
-		graph.graph(result);
+		}
+
 	}
-
 }

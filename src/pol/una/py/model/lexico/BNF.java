@@ -1,8 +1,11 @@
 package pol.una.py.model.lexico;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
+import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Alfabeto;
 
 /**
@@ -79,6 +82,28 @@ public class BNF {
 
 	}
 
+	/**
+	 * Procesa la definición regular y convierte cada producción a su AFN
+	 * equivalente.
+	 * 
+	 * @return Lista de AFNs asociados a la definición regular.
+	 * @throws AnalizadorLexicoException
+	 */
+	public List<AFN> process() throws AnalizadorLexicoException {
+		List<AFN> aRet = new ArrayList<>();
+		if (unAlfabeto) {
+			for (ProduccionBNF produccion : producciones) {
+				aRet.add(new AFN(produccion, alfabeto));
+			}
+		} else {
+			for (ProduccionBNF produccion : producciones) {
+				aRet.add(new AFN(produccion, alfabetos));
+			}
+
+		}
+		return aRet;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -146,7 +171,7 @@ public class BNF {
 		sb.append("BNF: ");
 		sb.append(getName());
 		sb.append("\n");
-		sb.append("ALFABETO/S: ");
+		sb.append(" ");
 		if (unAlfabeto) {
 			sb.append(alfabeto.toString());
 		} else {
