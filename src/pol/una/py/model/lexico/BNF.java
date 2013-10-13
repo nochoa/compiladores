@@ -171,7 +171,7 @@ public class BNF {
 		sb.append("BNF: ");
 		sb.append(getName());
 		sb.append("\n");
-		sb.append(" ");
+		sb.append("ALFABETO/S: ");
 		if (unAlfabeto) {
 			sb.append(alfabeto.toString());
 		} else {
