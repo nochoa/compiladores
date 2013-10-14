@@ -1,9 +1,10 @@
-package pol.una.py.model.lexico;
+package pol.una.py.model.lexico.algoritmos;
 
 import pol.una.py.model.automatas.AF;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.TablaTransicion;
 import pol.una.py.model.base.Transicion;
+import pol.una.py.model.lexico.Token;
 
 /**
  * Clase que proporciona las funcionalidades necesarias para la construcción de

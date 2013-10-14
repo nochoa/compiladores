@@ -12,7 +12,7 @@ import pol.una.py.model.lexico.AnalizadorLexico;
 import pol.una.py.model.lexico.BNF;
 import pol.una.py.model.lexico.ExpresionRegular;
 import pol.una.py.model.lexico.ProduccionBNF;
-import pol.una.py.model.lexico.Thompson;
+import pol.una.py.model.lexico.algoritmos.Thompson;
 import pol.una.py.views.grafos.GraphicHelper;
 
 /**

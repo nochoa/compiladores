@@ -8,6 +8,7 @@ import pol.una.py.excepciones.lexico.NoPerteneceAlAlfabeto;
 import pol.una.py.excepciones.lexico.ParentesisDerechoNoEncontrado;
 import pol.una.py.excepciones.lexico.ParentesisIzquierdoNoEncontrado;
 import pol.una.py.model.base.Alfabeto;
+import pol.una.py.model.lexico.algoritmos.Thompson;
 
 /**
  * Analizador que recibe una producción y genera el AFN resultante aplicando la

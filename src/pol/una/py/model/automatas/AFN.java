@@ -9,7 +9,7 @@ import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.AnalizadorLexico;
 import pol.una.py.model.lexico.ProduccionBNF;
-import pol.una.py.model.lexico.Thompson;
+import pol.una.py.model.lexico.algoritmos.Thompson;
 import pol.una.py.views.grafos.GraphicHelper;
 
 /**
@@ -31,6 +31,8 @@ public class AFN extends AF {
 	 * @param alfabetos
 	 * @throws AnalizadorLexicoException
 	 */
+	// TODO VER PARA RECIBIR EL THOMPSON DE MANERA A MANEJAR LAS EXCEPCIONES EN
+	// UN NIVEL SUPERIOR.
 	public AFN(ProduccionBNF produccion, Map<String, Alfabeto> alfabetos)
 			throws AnalizadorLexicoException {
 		AnalizadorLexico analizador = new AnalizadorLexico(produccion,
