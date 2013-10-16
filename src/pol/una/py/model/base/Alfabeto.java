@@ -12,19 +12,19 @@ import java.util.List;
  * 
  */
 public class Alfabeto {
-	private List<String> simbolos;
+	private List<String> symbols;
 
 	/**
-	 * @param simbolos
+	 * @param symbols
 	 *            Caracteres que pertenecen al alfabeto
 	 */
-	public Alfabeto(List<String> simbolos) {
+	public Alfabeto(List<String> symbols) {
 		super();
-		this.simbolos = simbolos;
+		this.symbols = symbols;
 	}
 
 	public Alfabeto(String stream) {
-		this.simbolos = Arrays.asList(stream.substring(1, stream.length() - 1)
+		this.symbols = Arrays.asList(stream.substring(1, stream.length() - 1)
 				.split(","));
 
 	}
@@ -37,22 +37,22 @@ public class Alfabeto {
 	 * @return
 	 */
 	public boolean pertenece(String value) {
-		return simbolos.contains(value);
+		return symbols.contains(value);
 	}
 
-	public void setSimbolos(List<String> simbolos) {
-		this.simbolos = simbolos;
+	public void setSymbols(List<String> symbols) {
+		this.symbols = symbols;
 	}
 
-	public List<String> getSimbolos() {
-		return simbolos;
+	public List<String> getSymbols() {
+		return symbols;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
-		for (String symbol : simbolos) {
+		for (String symbol : symbols) {
 			sb.append(symbol);
 			sb.append(",");
 		}

@@ -44,12 +44,12 @@ public class GraphicHelper {
 	private void paint(AF automata) {
 		try {
 			ProcessBuilder pbuilder;
-			String pathDot = generatePathDot(automata.getProduccion().getName());
-			String pathPng = generatePathPng(automata.getProduccion().getName());
+			String pathDot = generatePathDot(automata.getProduction().getName());
+			String pathPng = generatePathPng(automata.getProduction().getName());
 
-			FileWriter fichero = new FileWriter(pathDot);
-			fichero.write(generateDot(automata));
-			fichero.close();
+			FileWriter file = new FileWriter(pathDot);
+			file.write(generateDot(automata));
+			file.close();
 
 			// Realiza la construccion del comando en la linea de comandos esto
 			// es: dot -Tpng -o archivo.png archivo.dot
@@ -141,7 +141,7 @@ public class GraphicHelper {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" edge [color=black];\n");
 
-		for (Estado estado : automata.getTabla().getEstados()) {
+		for (Estado estado : automata.getTable().getStates()) {
 			buildNode(sb, estado);
 		}
 		return sb.toString();
@@ -153,22 +153,22 @@ public class GraphicHelper {
 	 * particular del automata y las transiciones que posee.
 	 * 
 	 * @param sb
-	 * @param estado
+	 * @param state
 	 *            Estado a representar.
 	 */
-	private void buildNode(StringBuilder sb, Estado estado) {
-		if (estado.isAceptacion()) {
-			sb.append(" " + estado.getValue());
+	private void buildNode(StringBuilder sb, Estado state) {
+		if (state.isAcceptation()) {
+			sb.append(" " + state.getValue());
 			sb.append(" [shape=doublecircle];\n");
 		} else {
-			sb.append(" " + estado.getValue());
+			sb.append(" " + state.getValue());
 			sb.append(" [shape=circle];\n");
 		}
-		for (Transicion transicion : estado.getTransiciones()) {
-			sb.append(" " + estado.getValue());
+		for (Transicion transicion : state.getTransitions()) {
+			sb.append(" " + state.getValue());
 			sb.append(" ->");
-			sb.append(transicion.getDestino().getValue());
-			sb.append(" [label=" + transicion.getSimbolo() + "];\n");
+			sb.append(transicion.getDestination().getValue());
+			sb.append(" [label=" + transicion.getSymbol() + "];\n");
 		}
 	}
 

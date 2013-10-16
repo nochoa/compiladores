@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class Estado {
 	private int value;
-	private boolean aceptacion;
-	private boolean visitado;
-	private List<Transicion> transiciones;
+	private boolean acceptation;
+	private boolean visited;
+	private List<Transicion> transitions;
 
 	/**
 	 * Crea un estado sin transiciones.
@@ -25,8 +25,9 @@ public class Estado {
 	public Estado(int value) {
 		super();
 		this.value = value;
-		this.aceptacion = false;
-		this.transiciones = new ArrayList<>();
+		this.acceptation = false;
+		this.visited = false;
+		this.transitions = new ArrayList<Transicion>();
 	}
 
 	/**
@@ -34,37 +35,38 @@ public class Estado {
 	 * 
 	 * @param value
 	 * 
-	 * @param transiciones
+	 * @param transitions
 	 */
-	public Estado(int value, List<Transicion> transiciones) {
+	public Estado(int value, List<Transicion> transitions) {
 		super();
 		this.value = value;
-		this.transiciones = transiciones;
-		this.aceptacion = false;
+		this.acceptation = false;
+		this.visited = false;
+		this.transitions = transitions;
 	}
 
 	/**
 	 * Obtiene los estados alcanzables con un determinado simbolo.
 	 * 
-	 * @param simbolo
+	 * @param symbol
 	 * @return Lista de estados alcanzables
 	 */
-	public List<Estado> getEstadosBySimbol(String simbolo) {
-		List<Estado> list = new ArrayList<>();
-		for (Transicion transicion : transiciones) {
-			if (transicion.getSimbolo().equals(simbolo)) {
-				list.add(transicion.getDestino());
+	public List<Estado> getStatesBySymbol(String symbol) {
+		List<Estado> list = new ArrayList<Estado>();
+		for (Transicion transition : transitions) {
+			if (transition.getSymbol().equals(symbol)) {
+				list.add(transition.getDestination());
 			}
 		}
 		return list;
 	}
 
-	public boolean isVisitado() {
-		return visitado;
+	public boolean isVisited() {
+		return visited;
 	}
 
-	public void setVisitado(boolean visitado) {
-		this.visitado = visitado;
+	public void setVisited(boolean visited) {
+		this.visited = visited;
 	}
 
 	public int getValue() {
@@ -75,27 +77,27 @@ public class Estado {
 		this.value = value;
 	}
 
-	public boolean isAceptacion() {
-		return aceptacion;
+	public boolean isAcceptation() {
+		return acceptation;
 	}
 
-	public void setAceptacion(boolean aceptacion) {
-		this.aceptacion = aceptacion;
+	public void setAcceptation(boolean acceptation) {
+		this.acceptation = acceptation;
 	}
 
-	public List<Transicion> getTransiciones() {
-		return transiciones;
+	public List<Transicion> getTransitions() {
+		return transitions;
 	}
 
-	public void addTransicion(Transicion transicion) {
-		if (transiciones == null) {
-			transiciones = new ArrayList<>();
+	public void addTransition(Transicion transition) {
+		if (transitions == null) {
+			transitions = new ArrayList<>();
 		}
-		this.transiciones.add(transicion);
+		this.transitions.add(transition);
 	}
 
-	public void setTransiciones(List<Transicion> transiciones) {
-		this.transiciones = transiciones;
+	public void setTransitions(List<Transicion> transitions) {
+		this.transitions = transitions;
 	}
 
 }

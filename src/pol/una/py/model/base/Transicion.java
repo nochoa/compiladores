@@ -9,44 +9,44 @@ package pol.una.py.model.base;
  * 
  */
 public class Transicion {
-	private Estado origen;
-	private Estado destino;
-	private String simbolo;
+	private Estado origin;
+	private Estado destination;
+	private String symbol;
 
 	/**
-	 * @param origen
-	 * @param destino
-	 * @param simbolo
+	 * @param origin
+	 * @param destination
+	 * @param symbol
 	 */
-	public Transicion(Estado origen, Estado destino, String simbolo) {
+	public Transicion(Estado origin, Estado destination, String symbol) {
 		super();
-		this.origen = origen;
-		this.destino = destino;
-		this.simbolo = simbolo;
+		this.origin = origin;
+		this.destination = destination;
+		this.symbol = symbol;
 	}
 
-	public Estado getOrigen() {
-		return origen;
+	public Estado getOrigin() {
+		return origin;
 	}
 
-	public void setOrigen(Estado origen) {
-		this.origen = origen;
+	public void setOrigin(Estado origin) {
+		this.origin = origin;
 	}
 
-	public Estado getDestino() {
-		return destino;
+	public Estado getDestination() {
+		return destination;
 	}
 
-	public void setDestino(Estado destino) {
-		this.destino = destino;
+	public void setDestination(Estado destination) {
+		this.destination = destination;
 	}
 
-	public String getSimbolo() {
-		return simbolo;
+	public String getSymbol() {
+		return symbol;
 	}
 
-	public void setSimbolo(String simbolo) {
-		this.simbolo = simbolo;
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
 	}
 
 }

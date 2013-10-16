@@ -17,8 +17,8 @@ public class Comparable implements Comparator<Estado> {
 	 * manera ascendente.
 	 */
 	@Override
-	public int compare(Estado estado1, Estado estado2) {
-		return (estado1.getValue() > estado2.getValue() ? 1 : (estado1
-				.getValue() == estado2.getValue() ? 0 : -1));
+	public int compare(Estado state1, Estado state2) {
+		return (state1.getValue() > state2.getValue() ? 1 : (state1
+				.getValue() == state2.getValue() ? 0 : -1));
 	}
 }

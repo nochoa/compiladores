@@ -17,26 +17,26 @@ import pol.una.py.model.base.Reservadas;
  * @version 1.0 03/10/2013
  */
 public class HelperLexico {
-	private ProduccionBNF produccion;
+	private ProduccionBNF production;
 	private StringBuilder buffer;
-	private Map<String, Alfabeto> alfabetos;
-	private Alfabeto alfabeto;
-	private boolean unAlfabeto;
+	private Map<String, Alfabeto> alphabets;
+	private Alfabeto alphabet;
+	private boolean oneAlphabet;
 
 	/**
 	 * Crea un parseador para una produccion con mas de un alfabeto.
 	 * 
-	 * @param produccion
+	 * @param production
 	 *            Produccion que se desea analizar.
-	 * @param alfabetos
+	 * @param alphabets
 	 *            Lista de alfabetos.
 	 */
-	public HelperLexico(ProduccionBNF produccion,
-			Map<String, Alfabeto> alfabetos) {
-		this.produccion = produccion;
-		this.alfabetos = alfabetos;
-		this.unAlfabeto = false;
-		this.buffer = new StringBuilder(produccion.getExpresionRegular()
+	public HelperLexico(ProduccionBNF production,
+			Map<String, Alfabeto> alphabets) {
+		this.production = production;
+		this.alphabets = alphabets;
+		this.oneAlphabet = false;
+		this.buffer = new StringBuilder(production.getExpresionRegular()
 				.getValue());
 
 	}
@@ -44,16 +44,16 @@ public class HelperLexico {
 	/**
 	 * Crea un parseador para una produccion con un solo alfabeto.
 	 * 
-	 * @param produccion
+	 * @param production
 	 *            Produccion que se desea analizar.
-	 * @param alfabeto
+	 * @param alphabet
 	 *            Alfabeto asociado a la expresion regular.
 	 */
-	public HelperLexico(ProduccionBNF produccion, Alfabeto alfabeto) {
-		this.produccion = produccion;
-		this.alfabeto = alfabeto;
-		this.unAlfabeto = true;
-		this.buffer = new StringBuilder(produccion.getExpresionRegular()
+	public HelperLexico(ProduccionBNF production, Alfabeto alphabet) {
+		this.production = production;
+		this.alphabet = alphabet;
+		this.oneAlphabet = true;
+		this.buffer = new StringBuilder(production.getExpresionRegular()
 				.getValue());
 
 	}
@@ -96,7 +96,7 @@ public class HelperLexico {
 		if (buffer.length() > 0) {
 			String value = Character.toString(buffer.charAt(0));
 			// Cada caracter es un token
-			if (unAlfabeto) {
+			if (oneAlphabet) {
 				buffer.deleteCharAt(0);
 				return value;
 
@@ -131,12 +131,12 @@ public class HelperLexico {
 	public boolean isValid(String value) {
 		// Si posee un solo alfabeto la validacion se realiza solbre un unico
 		// alfabeto
-		if (unAlfabeto) {
-			return alfabeto.pertenece(value);
+		if (oneAlphabet) {
+			return alphabet.pertenece(value);
 
 		} else {
 			// Si no la validacion se realiza por cada alfabeto asociado.
-			for (Map.Entry<String, Alfabeto> entry : alfabetos.entrySet()) {
+			for (Map.Entry<String, Alfabeto> entry : alphabets.entrySet()) {
 				if (entry.getKey().equals(value)) {
 					return true;
 				}
@@ -147,20 +147,20 @@ public class HelperLexico {
 
 	}
 
-	public Alfabeto getAlfabeto() {
-		return alfabeto;
+	public Alfabeto getAlphabet() {
+		return alphabet;
 	}
 
-	public void setAlfabeto(Alfabeto alfabeto) {
-		this.alfabeto = alfabeto;
+	public void setAlphabet(Alfabeto alphabet) {
+		this.alphabet = alphabet;
 	}
 
-	public boolean isUnAlfabeto() {
-		return unAlfabeto;
+	public boolean isOneAlphabet() {
+		return oneAlphabet;
 	}
 
-	public void setUnAlfabeto(boolean unAlfabeto) {
-		this.unAlfabeto = unAlfabeto;
+	public void setOneAlphabet(boolean oneAlphabet) {
+		this.oneAlphabet = oneAlphabet;
 	}
 
 	public StringBuilder getBuffer() {
@@ -171,20 +171,20 @@ public class HelperLexico {
 		this.buffer = buffer;
 	}
 
-	public Map<String, Alfabeto> getAlfabetos() {
-		return alfabetos;
+	public Map<String, Alfabeto> getAlphabets() {
+		return alphabets;
 	}
 
-	public void setAlfabetos(Map<String, Alfabeto> alfabetos) {
-		this.alfabetos = alfabetos;
+	public void setAlphabets(Map<String, Alfabeto> alphabets) {
+		this.alphabets = alphabets;
 	}
 
-	public ProduccionBNF getProduccion() {
-		return produccion;
+	public ProduccionBNF getProduction() {
+		return production;
 	}
 
-	public void setProduccion(ProduccionBNF produccion) {
-		this.produccion = produccion;
+	public void setProduction(ProduccionBNF production) {
+		this.production = production;
 	}
 
 }

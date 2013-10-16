@@ -19,11 +19,11 @@ import pol.una.py.model.lexico.ProduccionBNF;
  * @version 1.0 02/10/2013
  */
 public class AF {
-	private ProduccionBNF produccion;
-	private TablaTransicion tabla;
+	private ProduccionBNF production;
+	private TablaTransicion table;
 
 	public AF() {
-		this.tabla = new TablaTransicion();
+		this.table = new TablaTransicion();
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class AF {
 	 * @return Cantidad de estados
 	 */
 	public int size() {
-		return getTabla().getEstados().size();
+		return getTable().getStates().size();
 	}
 
 	/**
@@ -43,10 +43,10 @@ public class AF {
 	 *            utilizado para saber en cuento hay que correr la enumeración
 	 *            de los estados.
 	 */
-	public void reiniciarEstados(int cant) {
+	public void resetStates(int cant) {
 		int index = cant;
-		Collections.sort(getTabla().getEstados(), new Comparable());
-		for (Estado estado : getTabla().getEstados()) {
+		Collections.sort(getTable().getStates(), new Comparable());
+		for (Estado estado : getTable().getStates()) {
 			estado.setValue(index);
 			index++;
 		}
@@ -54,30 +54,46 @@ public class AF {
 	}
 
 	/**
+	 * Verifica si todos los estados del automata han sido visitados.
+	 * 
+	 * @return <b>true</b> Si todos los estados han sido visitados.</br>
+	 *         <b>false</b> Si al menos un detalle aun no ha sido visitado.
+	 */
+
+	public boolean visitAll() {
+		for (Estado estado : table.getStates()) {
+			if (estado.isVisited()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * @return the estadoInicial
 	 */
-	public Estado getEstadoInicial() {
-		return getTabla().getEstados().get(0);
+	public Estado getInitState() {
+		return getTable().getStates().get(0);
 	}
 
-	public Estado getEstadoFinal() {
-		return getTabla().getEstados().get(this.size() - 1);
+	public Estado getEndState() {
+		return getTable().getStates().get(this.size() - 1);
 	}
 
-	public TablaTransicion getTabla() {
-		return tabla;
+	public TablaTransicion getTable() {
+		return table;
 	}
 
-	public void setTabla(TablaTransicion tabla) {
-		this.tabla = tabla;
+	public void setTable(TablaTransicion table) {
+		this.table = table;
 	}
 
-	public ProduccionBNF getProduccion() {
-		return produccion;
+	public ProduccionBNF getProduction() {
+		return production;
 	}
 
-	public void setProduccion(ProduccionBNF produccion) {
-		this.produccion = produccion;
+	public void setProduction(ProduccionBNF production) {
+		this.production = production;
 	}
 
 	/**
@@ -87,9 +103,9 @@ public class AF {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Produccion: ");
-		sb.append(produccion.toString());
+		sb.append(production.toString());
 		sb.append("\n");
-		sb.append(tabla.toString());
+		sb.append(table.toString());
 		return sb.toString();
 	}
 

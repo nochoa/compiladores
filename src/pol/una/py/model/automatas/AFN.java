@@ -27,37 +27,37 @@ public class AFN extends AF {
 	/**
 	 * Crea un AFN para una produccion con mas de un alfabeto.
 	 * 
-	 * @param produccion
-	 * @param alfabetos
+	 * @param production
+	 * @param alphabets
 	 * @throws AnalizadorLexicoException
 	 */
 	// TODO VER PARA RECIBIR EL THOMPSON DE MANERA A MANEJAR LAS EXCEPCIONES EN
 	// UN NIVEL SUPERIOR.
-	public AFN(ProduccionBNF produccion, Map<String, Alfabeto> alfabetos)
+	public AFN(ProduccionBNF production, Map<String, Alfabeto> alphabets)
 			throws AnalizadorLexicoException {
-		AnalizadorLexico analizador = new AnalizadorLexico(produccion,
-				alfabetos);
+		AnalizadorLexico analizador = new AnalizadorLexico(production,
+				alphabets);
 
 		Thompson thompson = analizador.go();
-		this.setProduccion(produccion);
-		this.setTabla(thompson.getTabla());
+		this.setProduction(production);
+		this.setTable(thompson.getTable());
 
 	}
 
 	/**
 	 * Crea un AFN para una produccion con un solo alfabeto.
 	 * 
-	 * @param produccion
-	 * @param alfabeto
+	 * @param production
+	 * @param alphabet
 	 * @throws AnalizadorLexicoException
 	 */
-	public AFN(ProduccionBNF produccion, Alfabeto alfabeto)
+	public AFN(ProduccionBNF production, Alfabeto alphabet)
 			throws AnalizadorLexicoException {
-		AnalizadorLexico analizador = new AnalizadorLexico(produccion, alfabeto);
+		AnalizadorLexico analizador = new AnalizadorLexico(production, alphabet);
 
 		Thompson thompson = analizador.go();
-		this.setProduccion(produccion);
-		this.setTabla(thompson.getTabla());
+		this.setProduction(production);
+		this.setTable(thompson.getTable());
 	}
 
 	/**

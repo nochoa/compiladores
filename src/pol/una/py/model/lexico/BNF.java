@@ -18,30 +18,30 @@ import pol.una.py.model.base.Alfabeto;
  * 
  */
 public class BNF {
-	private List<ProduccionBNF> producciones;
+	private List<ProduccionBNF> productions;
 	private String name;
 
-	private Alfabeto alfabeto;
-	private Map<String, Alfabeto> alfabetos;
-	private boolean unAlfabeto;
+	private Alfabeto alphabet;
+	private Map<String, Alfabeto> alphabets;
+	private boolean oneAlphabet;
 
 	/**
 	 * Crea una definicion regular que posee una lista de alfabetos.
 	 * 
 	 * @param name
 	 *            Nombre de la definicion regular
-	 * @param producciones
+	 * @param productions
 	 *            Lista de producciones
-	 * @param alfabetos
+	 * @param alphabets
 	 *            Lista de alfabetos
 	 */
-	public BNF(String name, List<ProduccionBNF> producciones,
-			Map<String, Alfabeto> alfabetos) {
+	public BNF(String name, List<ProduccionBNF> productions,
+			Map<String, Alfabeto> alphabets) {
 		super();
 		this.name = name;
-		this.producciones = producciones;
-		this.alfabetos = alfabetos;
-		this.unAlfabeto = false;
+		this.productions = productions;
+		this.alphabets = alphabets;
+		this.oneAlphabet = false;
 	}
 
 	/**
@@ -49,17 +49,17 @@ public class BNF {
 	 * 
 	 * @param name
 	 *            Nombre de la definicion regular
-	 * @param producciones
+	 * @param productions
 	 *            Lista de producciones
-	 * @param alfabeto
+	 * @param alphabet
 	 *            Alfabeto del BNF.
 	 */
-	public BNF(String name, List<ProduccionBNF> producciones, Alfabeto alfabeto) {
+	public BNF(String name, List<ProduccionBNF> productions, Alfabeto alphabet) {
 		super();
 		this.name = name;
-		this.producciones = producciones;
-		this.alfabeto = alfabeto;
-		this.unAlfabeto = true;
+		this.productions = productions;
+		this.alphabet = alphabet;
+		this.oneAlphabet = true;
 	}
 
 	/**
@@ -71,12 +71,12 @@ public class BNF {
 	public boolean isValid(String value) {
 		// Si posee un solo alfabeto la validacion se realiza solbre un unico
 		// alfabeto
-		if (unAlfabeto) {
-			return alfabeto.pertenece(value);
+		if (oneAlphabet) {
+			return alphabet.pertenece(value);
 
 		} else {
 			// Si no la validacion se realiza por cada alfabeto asociado.
-			return alfabetos.containsKey(value);
+			return alphabets.containsKey(value);
 
 		}
 
@@ -91,13 +91,13 @@ public class BNF {
 	 */
 	public List<AFN> process() throws AnalizadorLexicoException {
 		List<AFN> aRet = new ArrayList<>();
-		if (unAlfabeto) {
-			for (ProduccionBNF produccion : producciones) {
-				aRet.add(new AFN(produccion, alfabeto));
+		if (oneAlphabet) {
+			for (ProduccionBNF production : productions) {
+				aRet.add(new AFN(production, alphabet));
 			}
 		} else {
-			for (ProduccionBNF produccion : producciones) {
-				aRet.add(new AFN(produccion, alfabetos));
+			for (ProduccionBNF production : productions) {
+				aRet.add(new AFN(production, alphabets));
 			}
 
 		}
@@ -112,54 +112,47 @@ public class BNF {
 		this.name = name;
 	}
 
-	public boolean isUnAlfabeto() {
-		return unAlfabeto;
+	public boolean isOneAlphabet() {
+		return oneAlphabet;
 	}
 
-	public Map<String, Alfabeto> getAlfabetos() {
-		return alfabetos;
+	public Map<String, Alfabeto> getAlphabets() {
+		return alphabets;
 	}
 
-	public void setAlfabetos(Map<String, Alfabeto> alfabetos) {
-		this.alfabetos = alfabetos;
+	public void setAlphabetS(Map<String, Alfabeto> alphabets) {
+		this.alphabets = alphabets;
 	}
 
 	/**
-	 * @param alfabeto
+	 * @param alphabet
 	 *            the alfabeto to set
 	 */
-	public void setAlfabeto(Alfabeto alfabeto) {
-		this.alfabeto = alfabeto;
+	public void setAlphabet(Alfabeto alphabet) {
+		this.alphabet = alphabet;
 	}
 
 	/**
 	 * @return the alfabeto
 	 */
-	public Alfabeto getAlfabeto() {
-		return alfabeto;
+	public Alfabeto getAlphabet() {
+		return alphabet;
 	}
 
 	/**
 	 * @param tieneUnAlfabeto
 	 *            the tieneUnAlfabeto to set
 	 */
-	public void setUnAlfabeto(boolean unAlfabeto) {
-		this.unAlfabeto = unAlfabeto;
+	public void setOneAlphabet(boolean oneAlphabet) {
+		this.oneAlphabet = oneAlphabet;
 	}
 
-	/**
-	 * @return the tieneUnAlfabeto
-	 */
-	public boolean unAlfabeto() {
-		return unAlfabeto;
+	public List<ProduccionBNF> getProductions() {
+		return productions;
 	}
 
-	public List<ProduccionBNF> getProducciones() {
-		return producciones;
-	}
-
-	public void setProducciones(List<ProduccionBNF> producciones) {
-		this.producciones = producciones;
+	public void setProductions(List<ProduccionBNF> productions) {
+		this.productions = productions;
 	}
 
 	/**
@@ -172,10 +165,10 @@ public class BNF {
 		sb.append(getName());
 		sb.append("\n");
 		sb.append("ALFABETO/S: ");
-		if (unAlfabeto) {
-			sb.append(alfabeto.toString());
+		if (oneAlphabet) {
+			sb.append(alphabet.toString());
 		} else {
-			for (Map.Entry<String, Alfabeto> alfabeto : alfabetos.entrySet()) {
+			for (Map.Entry<String, Alfabeto> alfabeto : alphabets.entrySet()) {
 				sb.append(alfabeto.getKey());
 				sb.append(" = ");
 				sb.append(alfabeto.getValue().toString());
@@ -183,8 +176,8 @@ public class BNF {
 			}
 		}
 		sb.append("\n");
-		for (ProduccionBNF produccion : producciones) {
-			sb.append(produccion.toString());
+		for (ProduccionBNF production : productions) {
+			sb.append(production.toString());
 			sb.append("\n");
 		}
 		return sb.toString();

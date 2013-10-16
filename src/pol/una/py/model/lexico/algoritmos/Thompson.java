@@ -7,9 +7,10 @@ import pol.una.py.model.base.Transicion;
 import pol.una.py.model.lexico.Token;
 
 /**
- * Clase que proporciona las funcionalidades necesarias para la construcción de
- * Thompson. La cual construye a partir de una expresion regular un diagrama
- * AFN.
+ * Clase que proporciona las funcionalidades necesarias para el algoritmo de
+ * construcción de Thompson. Utiliza transiciones ε para unir las máquinas de
+ * cada segmento de una expresión regular con el fin de formar una máquina que
+ * corresponde con la expresión completa.
  * 
  * @author Nathalia Ochoa
  * @since 1.0
@@ -34,43 +35,43 @@ public class Thompson extends AF {
 	 * 
 	 */
 	public Thompson(Token token) {
-		this.setTabla(new TablaTransicion());
+		this.setTable(new TablaTransicion());
 
-		Estado origen = new Estado(0);
-		Estado destino = new Estado(1);
+		Estado origin = new Estado(0);
+		Estado destination = new Estado(1);
 
-		origen.addTransicion(new Transicion(origen, destino, token.getValue()));
+		origin.addTransition(new Transicion(origin, destination, token.getValue()));
 
-		this.getTabla().addEstado(origen);
-		this.getTabla().addEstado(destino);
+		this.getTable().addEstado(origin);
+		this.getTable().addEstado(destination);
 	}
 
 	public void or(Thompson thompson) {
-		Estado newInicial = new Estado(0);
+		Estado newInit = new Estado(0);
 		Estado newFinal = new Estado(this.size() + thompson.size() + 1);
 
-		reiniciarEstados(1);
-		thompson.reiniciarEstados(this.size() + 1);
+		resetStates(1);
+		thompson.resetStates(this.size() + 1);
 
 		// Conectamos el nuevo estado inicial con ambos automatas.
-		newInicial.addTransicion(new Transicion(newInicial, getEstadoInicial(),
+		newInit.addTransition(new Transicion(newInit, getInitState(),
 				ε));
-		newInicial.addTransicion(new Transicion(newInicial, thompson
-				.getEstadoInicial(), ε));
+		newInit.addTransition(new Transicion(newInit, thompson
+				.getInitState(), ε));
 
 		// Conectamos ambos automatas con el nuevo estado final.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), newFinal, ε));
-		thompson.getEstadoFinal().addTransicion(
-				new Transicion(thompson.getEstadoFinal(), newFinal, ε));
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), newFinal, ε));
+		thompson.getEndState().addTransition(
+				new Transicion(thompson.getEndState(), newFinal, ε));
 
 		// Agregamos los estados del automata2 en el automata1.
-		for (Estado estado : thompson.getTabla().getEstados()) {
-			this.getTabla().addEstado(estado);
+		for (Estado estado : thompson.getTable().getStates()) {
+			this.getTable().addEstado(estado);
 		}
 
-		this.getTabla().addEstado(newInicial);
-		this.getTabla().addEstado(newFinal);
+		this.getTable().addEstado(newInit);
+		this.getTable().addEstado(newFinal);
 
 	}
 
@@ -78,91 +79,91 @@ public class Thompson extends AF {
 		// Si la cadena vacia aun no esta en la lista de simbolos la agregamos.
 		// Esto es debido a que los simbolos se agregan cuando de agrega un
 		// estado pero en esta operacion no se agrega ningun estado.
-		this.getTabla().addSimbolEmpty();
+		this.getTable().addSymbolEmpty();
 
-		thompson.reiniciarEstados(this.size());
+		thompson.resetStates(this.size());
 
 		// Conectamos ambos automatas con una transicion ε.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), thompson
-						.getEstadoInicial(), ε));
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), thompson
+						.getInitState(), ε));
 
 		// Agregamos los estados del automata2 en el automata1.
-		for (Estado estado : thompson.getTabla().getEstados()) {
-			this.getTabla().addEstado(estado);
+		for (Estado state : thompson.getTable().getStates()) {
+			this.getTable().addEstado(state);
 		}
 
 	}
 
 	public void cerradura_kleene() {
-		Estado newInicial = new Estado(0);
+		Estado newInit = new Estado(0);
 		Estado newFinal = new Estado(this.size() + 1);
 
-		reiniciarEstados(1);
+		resetStates(1);
 
 		// Conectamos el nuevo estado inicial con el estado inicial del
 		// automata.
-		newInicial.addTransicion(new Transicion(newInicial, getEstadoInicial(),
+		newInit.addTransition(new Transicion(newInit, getInitState(),
 				ε));
 		// Agregamos la transicion ε para la cadena vacia.
-		newInicial.addTransicion(new Transicion(newInicial, newFinal, ε));
+		newInit.addTransition(new Transicion(newInit, newFinal, ε));
 
 		// Conectamos el estado final del automata con el nuevo estado final.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), newFinal, ε));
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), newFinal, ε));
 
 		// Agregamos la transicion ε para la repeticion.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), this.getEstadoInicial(),
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), this.getInitState(),
 						ε));
 
-		this.getTabla().addEstado(newInicial);
-		this.getTabla().addEstado(newFinal);
+		this.getTable().addEstado(newInit);
+		this.getTable().addEstado(newFinal);
 
 	}
 
 	public void cerradura_kleene_positive() {
-		Estado newInicial = new Estado(0);
+		Estado newInit = new Estado(0);
 		Estado newFinal = new Estado(this.size() + 1);
 
-		reiniciarEstados(1);
+		resetStates(1);
 
 		// Conectamos el nuevo estado inicial con el estado inicial del
 		// automata.
-		newInicial.addTransicion(new Transicion(newInicial, getEstadoInicial(),
+		newInit.addTransition(new Transicion(newInit, getInitState(),
 				ε));
 
 		// Conectamos el estado final del automata con el nuevo estado final.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), newFinal, ε));
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), newFinal, ε));
 
 		// Agregamos la transicion ε para la repeticion.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), newFinal, ε));
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), newFinal, ε));
 
-		getTabla().addEstado(newInicial);
-		getTabla().addEstado(newFinal);
+		getTable().addEstado(newInit);
+		getTable().addEstado(newFinal);
 
 	}
 
 	public void alternative() {
-		Estado newInicial = new Estado(0);
+		Estado newInit = new Estado(0);
 		Estado newFinal = new Estado(this.size() + 1);
 
-		reiniciarEstados(1);
+		resetStates(1);
 
 		// Conectamos el nuevo estado inicial con el estado inicial del
 		// automata.
-		newInicial.addTransicion(new Transicion(newInicial, getEstadoInicial(),
+		newInit.addTransition(new Transicion(newInit, getInitState(),
 				ε));
-		newInicial.addTransicion(new Transicion(newInicial, newFinal, ε));
+		newInit.addTransition(new Transicion(newInit, newFinal, ε));
 
 		// Conectamos el estado final del automata con el nuevo estado final.
-		this.getEstadoFinal().addTransicion(
-				new Transicion(this.getEstadoFinal(), newFinal, ε));
+		this.getEndState().addTransition(
+				new Transicion(this.getEndState(), newFinal, ε));
 
-		getTabla().addEstado(newInicial);
-		getTabla().addEstado(newFinal);
+		getTable().addEstado(newInit);
+		getTable().addEstado(newFinal);
 
 	}
 

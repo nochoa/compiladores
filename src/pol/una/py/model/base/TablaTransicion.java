@@ -13,54 +13,54 @@ import java.util.List;
  * 
  */
 public class TablaTransicion {
-	private List<Estado> estados;
-	private List<String> simbolos;
+	private List<Estado> states;
+	private List<String> symbols;
 
 	public TablaTransicion() {
-		estados = new ArrayList<Estado>();
-		simbolos = new ArrayList<String>();
+		states = new ArrayList<Estado>();
+		symbols = new ArrayList<String>();
 	}
 
 	/**
 	 * Agrega un estado a la tabla de transiciones.
 	 * 
-	 * @param estado
+	 * @param state
 	 *            Estado a agregar.
 	 */
-	public void addEstado(Estado estado) {
-		estados.add(estado);
-		addSimbolos(estado);
+	public void addEstado(Estado state) {
+		states.add(state);
+		addSymbols(state);
 	}
 
-	public void addSimbolos(Estado estado) {
-		for (Transicion transicion : estado.getTransiciones()) {
-			if (!simbolos.contains(transicion.getSimbolo())) {
-				simbolos.add(transicion.getSimbolo());
+	public void addSymbols(Estado state) {
+		for (Transicion transition : state.getTransitions()) {
+			if (!symbols.contains(transition.getSymbol())) {
+				symbols.add(transition.getSymbol());
 			}
 		}
 	}
 
-	public void addSimbolEmpty() {
-		if (!simbolos.contains("ε")) {
-			simbolos.add("ε");
+	public void addSymbolEmpty() {
+		if (!symbols.contains("ε")) {
+			symbols.add("ε");
 		}
 	}
 
-	public List<Estado> getEstados() {
-		Collections.sort(estados, new Comparable());
-		return estados;
+	public List<Estado> getStates() {
+		Collections.sort(states, new Comparable());
+		return states;
 	}
 
-	public void setEstados(List<Estado> estados) {
-		this.estados = estados;
+	public void setStates(List<Estado> states) {
+		this.states = states;
 	}
 
-	public List<String> getSimbolos() {
-		return simbolos;
+	public List<String> getSymbols() {
+		return symbols;
 	}
 
-	public void setSimbolos(List<String> simbolos) {
-		this.simbolos = simbolos;
+	public void setSymbols(List<String> symbols) {
+		this.symbols = symbols;
 	}
 
 	/**
@@ -72,12 +72,12 @@ public class TablaTransicion {
 		sb.append("----------Tabla de transiciones----------");
 		sb.append("\n");
 		sb.append("Estado - Transiciones \n");
-		Collections.sort(estados, new Comparable());
-		for (Estado estado : estados) {
+		Collections.sort(states, new Comparable());
+		for (Estado estado : states) {
 			sb.append("  " + estado.getValue() + "    - ");
-			for (Transicion transicion : estado.getTransiciones()) {
-				sb.append("(" + transicion.getSimbolo() + ")"
-						+ transicion.getDestino().getValue());
+			for (Transicion transicion : estado.getTransitions()) {
+				sb.append("(" + transicion.getSymbol() + ")"
+						+ transicion.getDestination().getValue());
 			}
 			sb.append("\n");
 		}

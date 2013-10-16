@@ -28,7 +28,7 @@ import pol.una.py.model.lexico.algoritmos.Thompson;
  */
 public class AnalizadorLexico {
 	private Thompson thompson;
-	private ProduccionBNF produccion;
+	private ProduccionBNF production;
 	private HelperLexico helper;
 	private Token preAnalisis;
 
@@ -38,10 +38,10 @@ public class AnalizadorLexico {
 	 * @param producción
 	 *            producción la cual se desea generar el AFN
 	 */
-	public AnalizadorLexico(ProduccionBNF produccion,
-			Map<String, Alfabeto> alfabetos) {
-		this.produccion = produccion;
-		this.helper = new HelperLexico(produccion, alfabetos);
+	public AnalizadorLexico(ProduccionBNF production,
+			Map<String, Alfabeto> alphabets) {
+		this.production = production;
+		this.helper = new HelperLexico(production, alphabets);
 		try {
 			this.preAnalisis = helper.next();
 			this.thompson = new Thompson();
@@ -51,9 +51,9 @@ public class AnalizadorLexico {
 		}
 	}
 
-	public AnalizadorLexico(ProduccionBNF produccion, Alfabeto alfabeto) {
-		this.produccion = produccion;
-		this.helper = new HelperLexico(produccion, alfabeto);
+	public AnalizadorLexico(ProduccionBNF production, Alfabeto alphabet) {
+		this.production = production;
+		this.helper = new HelperLexico(production, alphabet);
 		try {
 			this.preAnalisis = helper.next();
 			this.thompson = new Thompson();
@@ -68,10 +68,10 @@ public class AnalizadorLexico {
 
 		this.thompson = expresion();
 
-		if (!preAnalisis.getTipo().equals(TipoToken.FIN)) {
+		if (!preAnalisis.getType().equals(TipoToken.FIN)) {
 			throw new ExpresionRegularMalFormada(preAnalisis.getValue());
 		}
-		thompson.getEstadoFinal().setAceptacion(true);
+		thompson.getEndState().setAcceptation(true);
 		return thompson;
 	}
 
@@ -96,7 +96,7 @@ public class AnalizadorLexico {
 			automata1.or(automata2);
 		}
 
-		automata1.setProduccion(produccion);
+		automata1.setProduction(production);
 		return automata1;
 	}
 
@@ -158,7 +158,7 @@ public class AnalizadorLexico {
 
 		String current = preAnalisis.getValue();
 		Thompson result = null;
-		if ((preAnalisis.getTipo() != TipoToken.FIN) && helper.isValid(current)
+		if ((preAnalisis.getType() != TipoToken.FIN) && helper.isValid(current)
 				|| current.equals("(")) {
 			result = procesarExpresion();
 		}
@@ -280,7 +280,7 @@ public class AnalizadorLexico {
 	private Thompson checkFin() throws MatchingFailure {
 		Thompson nuevo = null;
 
-		if (preAnalisis.getTipo() != TipoToken.FIN) {
+		if (preAnalisis.getType() != TipoToken.FIN) {
 			nuevo = new Thompson(preAnalisis);
 			this.match(preAnalisis.getValue());
 		}
@@ -288,10 +288,10 @@ public class AnalizadorLexico {
 		return nuevo;
 	}
 
-	private void match(String simbolo) throws MatchingFailure {
+	private void match(String symbol) throws MatchingFailure {
 
-		Token temporal = new Token(simbolo);
-		if (getPreAnalisis().isEquals(temporal)) {
+		Token temp = new Token(symbol);
+		if (getPreAnalisis().isEquals(temp)) {
 			try {
 				this.setPreAnalisis(helper.next());
 			} catch (NoPerteneceAlAlfabeto e) {
@@ -311,11 +311,11 @@ public class AnalizadorLexico {
 	}
 
 	public ProduccionBNF getExpresionRegular() {
-		return produccion;
+		return production;
 	}
 
 	public void setExpresionRegular(ProduccionBNF expresionRegular) {
-		this.produccion = expresionRegular;
+		this.production = expresionRegular;
 	}
 
 	public HelperLexico getHelper() {

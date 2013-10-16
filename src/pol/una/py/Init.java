@@ -8,10 +8,13 @@ import java.util.Map;
 import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
 import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Alfabeto;
+import pol.una.py.model.base.Estado;
 import pol.una.py.model.lexico.AnalizadorLexico;
 import pol.una.py.model.lexico.BNF;
+import pol.una.py.model.lexico.Cerradura;
 import pol.una.py.model.lexico.ExpresionRegular;
 import pol.una.py.model.lexico.ProduccionBNF;
+import pol.una.py.model.lexico.algoritmos.Subconjunto;
 import pol.una.py.model.lexico.algoritmos.Thompson;
 import pol.una.py.views.grafos.GraphicHelper;
 
@@ -35,20 +38,23 @@ public class Init {
 		alfabetos.put("digito", new Alfabeto(DIGITOS));
 		alfabetos.put("letra", new Alfabeto(LETRAS));
 
-		ExpresionRegular expresion1 = new ExpresionRegular(
-				"([letra]|[digito])*");
+		ExpresionRegular expresion1 = new ExpresionRegular("a(c|b)*b?(a|c)*");
 		ExpresionRegular expresion2 = new ExpresionRegular("[letra]*");
 
 		List<ProduccionBNF> producciones = new ArrayList<>();
 		producciones.add(new ProduccionBNF("identificador", expresion1));
-		producciones.add(new ProduccionBNF("letra", expresion2));
+		// producciones.add(new ProduccionBNF("letra", expresion2));
 
-		BNF bnf = new BNF("Prueba", producciones, alfabetos);
+		BNF bnf = new BNF("Prueba", producciones, new Alfabeto(LETRAS));
 		System.out.println(bnf.toString());
 
 		for (AFN afn : bnf.process()) {
 			System.out.println(afn.toString());
 			afn.paint();
+			Subconjunto subconjunto = new Subconjunto();
+			for (Cerradura cerradura : subconjunto.build(afn).getCerraduras()) {
+				System.out.println(cerradura.toString());
+			}
 
 		}
 
