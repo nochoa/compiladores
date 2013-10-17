@@ -166,18 +166,18 @@ public class BNF {
 		sb.append("\n");
 		sb.append("ALFABETO/S: ");
 		if (oneAlphabet) {
-			sb.append(alphabet.toString());
+			sb.append(alphabet);
 		} else {
 			for (Map.Entry<String, Alfabeto> alfabeto : alphabets.entrySet()) {
 				sb.append(alfabeto.getKey());
 				sb.append(" = ");
-				sb.append(alfabeto.getValue().toString());
+				sb.append(alfabeto.getValue());
 				sb.append("; ");
 			}
 		}
 		sb.append("\n");
 		for (ProduccionBNF production : productions) {
-			sb.append(production.toString());
+			sb.append(production);
 			sb.append("\n");
 		}
 		return sb.toString();

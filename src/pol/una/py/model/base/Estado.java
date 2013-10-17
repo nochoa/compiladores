@@ -100,4 +100,16 @@ public class Estado {
 		this.transitions = transitions;
 	}
 
+	public static String toStringList(List<Estado> states) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		for (Estado state : states) {
+			sb.append(state.getValue());
+			sb.append(",");
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("}");
+		return sb.toString();
+	}
+
 }
