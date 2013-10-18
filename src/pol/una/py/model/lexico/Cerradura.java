@@ -6,7 +6,9 @@ package pol.una.py.model.lexico;
 import java.util.ArrayList;
 import java.util.List;
 
+import pol.una.py.model.automatas.AF;
 import pol.una.py.model.base.Estado;
+import pol.una.py.model.base.Transicion;
 
 /**
  * Clase utilizada para representar cerraduras ε utilizadas para el algoritmo de
@@ -59,6 +61,22 @@ public class Cerradura {
 
 	public void addSubconjunto(String symbol, List<Estado> states) {
 		subconjuntos.add(new Subconjunto(symbol, states));
+	}
+
+	/**
+	 * Verifica si la cerradura es un estado de aceptacion, esto es, si al menos
+	 * uno de los estados alcanzables es un estado final.
+	 * 
+	 * @return <b>true</b> Si es un estado final.</br> <b> false</b> Caso
+	 *         contrario.
+	 */
+	public boolean isAcceptation() {
+		for (Estado state : estadosAcanzables) {
+			if (state.isAcceptation()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public List<Estado> getConjunto() {
@@ -115,34 +133,24 @@ public class Cerradura {
 	 * @return
 	 */
 	public String getCodigoUnico() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		for (Estado estado : estadosAcanzables) {
-			sb.append(estado.getValue());
-			sb.append(",");
-		}
-		sb.deleteCharAt(sb.length() - 1);
-		sb.append("}");
-		return sb.toString();
+
+		return Estado.toStringList(estadosAcanzables);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		for (Estado estado : conjunto) {
-			sb.append(estado.getValue());
-			sb.append(",");
-		}
+		sb.append(Estado.toStringList(conjunto));
+		sb.deleteCharAt(1);
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append("]");
 		sb.append(" - ");
 		sb.append(getCodigoUnico());
+		sb.append("\n");
+		for (Subconjunto subconjunto : subconjuntos) {
+			sb.append(subconjunto + "\n");
+		}
 
 		return sb.toString();
 	}
@@ -177,6 +185,16 @@ public class Cerradura {
 
 		public void setStates(List<Estado> states) {
 			this.states = states;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("Simbolo ");
+			sb.append(symbol);
+			sb.append(" = ");
+			sb.append(Estado.toStringList(states));
+			return sb.toString();
 		}
 
 	}

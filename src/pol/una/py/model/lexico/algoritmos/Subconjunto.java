@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pol.una.py.model.automatas.AF;
 import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Comparable;
 import pol.una.py.model.base.Estado;
@@ -28,12 +29,14 @@ import pol.una.py.model.lexico.Cerradura;
 public class Subconjunto {
 	private static final String ε = "ε";
 	private List<Cerradura> cerraduras;
+	private AF automata;
 
 	/**
 	 * Constructor por defecto.
 	 */
 	public Subconjunto() {
 		cerraduras = new ArrayList<Cerradura>();
+		automata = new AF();
 	}
 
 	/**
@@ -45,8 +48,7 @@ public class Subconjunto {
 	 */
 	public Subconjunto build(AFN automata) {
 		// Calculamos la cerradura ε para el estado inicial.
-		Cerradura cerraduraInicial = new Cerradura(0,
-				automata.getInitState(),
+		Cerradura cerraduraInicial = new Cerradura(0, automata.getInitState(),
 				buildCerradura(automata.getInitState()));
 		cerraduras.add(cerraduraInicial);
 
@@ -259,6 +261,20 @@ public class Subconjunto {
 		}
 	}
 
+	private void buildAFD() {
+		for (Cerradura cerradura : cerraduras) {
+			Estado estado = new Estado(cerradura.getValue());
+			estado.setAcceptation(cerradura.isAcceptation());
+			for (pol.una.py.model.lexico.Cerradura.Subconjunto simbolo : cerradura
+					.getSubconjuntos()) {
+
+				// estado.addTransition(new Transicion(estado, destination,
+				// simbolo));
+			}
+			automata.getTable().addEstado(estado);
+		}
+	}
+
 	/**
 	 * Cantidad de cerraduras del subconjunto.
 	 * 
@@ -274,5 +290,13 @@ public class Subconjunto {
 
 	public void setCerraduras(List<Cerradura> cerraduras) {
 		this.cerraduras = cerraduras;
+	}
+
+	public AF getAutomata() {
+		return automata;
+	}
+
+	public void setAutomata(AF automata) {
+		this.automata = automata;
 	}
 }

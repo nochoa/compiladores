@@ -40,6 +40,22 @@ public class TablaTransicion {
 		}
 	}
 
+	/**
+	 * Verifica si un estado se encuentra en la tabla de transicion, de ser asi
+	 * retorna dicho estado.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public Estado getState(int value) {
+		for (Estado state : states) {
+			if (state.getValue() == value) {
+				return state;
+			}
+		}
+		return null;
+	}
+
 	public void addSymbolEmpty() {
 		if (!symbols.contains("ε")) {
 			symbols.add("ε");
