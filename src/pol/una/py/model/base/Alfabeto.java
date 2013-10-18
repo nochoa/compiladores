@@ -1,7 +1,6 @@
 package pol.una.py.model.base;
 
-import java.util.Arrays;
-import java.util.List;
+
 
 /**
  * Representa un alfabeto del lenguaje
@@ -14,10 +13,12 @@ import java.util.List;
 public class Alfabeto {
 	private List<String> symbols;
 
+
 	/**
 	 * @param symbols
 	 *            Caracteres que pertenecen al alfabeto
 	 */
+
 	public Alfabeto(List<String> symbols) {
 		super();
 		this.symbols = symbols;
@@ -26,7 +27,6 @@ public class Alfabeto {
 	public Alfabeto(String stream) {
 		this.symbols = Arrays.asList(stream.substring(1, stream.length() - 1)
 				.split(","));
-
 	}
 
 	/**
@@ -58,7 +58,6 @@ public class Alfabeto {
 		}
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append("}");
-
 		return sb.toString();
 	}
 

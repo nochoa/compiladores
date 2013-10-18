@@ -17,6 +17,9 @@ import pol.una.py.model.lexico.ProduccionBNF;
 import pol.una.py.model.lexico.algoritmos.Subconjunto;
 import pol.una.py.model.lexico.algoritmos.Thompson;
 import pol.una.py.views.grafos.GraphicHelper;
+import pol.una.py.views.Login;
+import pol.una.py.views.menu.MenuInput;
+
 
 /**
  * Punto de entrada a la aplicación
@@ -28,9 +31,9 @@ import pol.una.py.views.grafos.GraphicHelper;
  */
 public class Init {
 	public static void main(String[] args) throws AnalizadorLexicoException {
-		// Login.call();
-		// MenuInput menu = new MenuInput();
-		// menu.build();
+		 Login.call();
+		 MenuInput menu = new MenuInput();
+		 menu.build();
 		String DIGITOS = "{0,1,2,3,4,5,6}";
 		String LETRAS = "{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,s}";
 
