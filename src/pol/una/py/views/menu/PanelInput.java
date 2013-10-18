@@ -11,8 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+
 import pol.una.py.model.base.Alfabeto;
-import pol.una.py.model.lexico.ProduccionBNF;
 
 
 

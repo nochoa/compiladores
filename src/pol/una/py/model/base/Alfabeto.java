@@ -1,5 +1,8 @@
 package pol.una.py.model.base;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 
 /**
