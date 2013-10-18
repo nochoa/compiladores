@@ -20,7 +20,6 @@ import pol.una.py.views.grafos.GraphicHelper;
 import pol.una.py.views.Login;
 import pol.una.py.views.menu.MenuInput;
 
-
 /**
  * Punto de entrada a la aplicación
  * 
@@ -31,24 +30,22 @@ import pol.una.py.views.menu.MenuInput;
  */
 public class Init {
 	public static void main(String[] args) throws AnalizadorLexicoException {
-		 Login.call();
-		 MenuInput menu = new MenuInput();
-		 menu.build();
-		String DIGITOS = "{0,1,2,3,4,5,6}";
-		String LETRAS = "{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,s}";
+		// Login.call();
+		MenuInput menu = new MenuInput();
+		menu.build();
 
 		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
-		alfabetos.put("digito", new Alfabeto(DIGITOS));
-		alfabetos.put("letra", new Alfabeto(LETRAS));
-
-		ExpresionRegular expresion1 = new ExpresionRegular("a(c|b)*b?(a|c)*");
+		alfabetos.put("digito", new Alfabeto(Alfabeto.DIGITOS));
+		alfabetos.put("letra", new Alfabeto(Alfabeto.LETRAS_MINUSCULAS));
+		// a(c|b)*b?(a|c)*
+		ExpresionRegular expresion1 = new ExpresionRegular("[letra]|[digito]");
 		ExpresionRegular expresion2 = new ExpresionRegular("[letra]*");
 
 		List<ProduccionBNF> producciones = new ArrayList<>();
 		producciones.add(new ProduccionBNF("identificador", expresion1));
-		// producciones.add(new ProduccionBNF("letra", expresion2));
+		producciones.add(new ProduccionBNF("letra", expresion2));
 
-		BNF bnf = new BNF("Prueba", producciones, new Alfabeto(LETRAS));
+		BNF bnf = new BNF("Prueba", producciones, alfabetos);
 		System.out.println(bnf.toString());
 
 		for (AFN afn : bnf.process()) {
