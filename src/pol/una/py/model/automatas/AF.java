@@ -4,6 +4,7 @@
 package pol.una.py.model.automatas;
 
 import java.util.Collections;
+import java.util.List;
 
 import pol.una.py.model.base.Comparable;
 import pol.una.py.model.base.Estado;
@@ -24,6 +25,35 @@ public class AF {
 
 	public AF() {
 		this.table = new TablaTransicion();
+	}
+
+	/**
+	 * Agrega un estado a la tabla de transiciones.
+	 * 
+	 * @param state
+	 *            Estado a agregar.
+	 */
+	public void addEstado(Estado state) {
+		getTable().addEstado(state);
+	}
+
+	public boolean containState(int value) {
+		return getTable().containState(value);
+	}
+
+	/**
+	 * Verifica si un estado se encuentra en la tabla de transicion, de ser asi
+	 * retorna dicho estado.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public Estado getState(int value) {
+		return getTable().getState(value);
+	}
+
+	public List<String> getSymbols() {
+		return getTable().getSymbols();
 	}
 
 	/**
@@ -82,6 +112,10 @@ public class AF {
 
 	public TablaTransicion getTable() {
 		return table;
+	}
+
+	public List<Estado> getStates() {
+		return getTable().getStates();
 	}
 
 	public void setTable(TablaTransicion table) {

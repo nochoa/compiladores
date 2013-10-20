@@ -32,7 +32,7 @@ public class TablaTransicion {
 		addSymbols(state);
 	}
 
-	public void addSymbols(Estado state) {
+	private void addSymbols(Estado state) {
 		for (Transicion transition : state.getTransitions()) {
 			if (!symbols.contains(transition.getSymbol())) {
 				symbols.add(transition.getSymbol());
@@ -48,12 +48,19 @@ public class TablaTransicion {
 	 * @return
 	 */
 	public Estado getState(int value) {
-		for (Estado state : states) {
-			if (state.getValue() == value) {
-				return state;
-			}
+		if(containState(value)){
+			return states.get(value);
 		}
 		return null;
+	}
+
+	public boolean containState(int value) {
+		for (Estado state : states) {
+			if (state.getValue() == value) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void addSymbolEmpty() {
