@@ -29,8 +29,8 @@ public class GraphicHelper {
 	 * 
 	 * @param automata
 	 */
-	public void graph(AF automata) {
-		paint(automata);
+	public void graph(AF automata, String type) {
+		paint(automata, type);
 	}
 
 	/**
@@ -40,12 +40,15 @@ public class GraphicHelper {
 	 * 
 	 * @param automata
 	 *            Automata a dibujar.
+	 * @param type
 	 */
-	private void paint(AF automata) {
+	private void paint(AF automata, String type) {
 		try {
 			ProcessBuilder pbuilder;
-			String pathDot = generatePathDot(automata.getProduction().getName());
-			String pathPng = generatePathPng(automata.getProduction().getName());
+			String pathDot = generatePathDot(automata.getProduction().getName()
+					.concat(type));
+			String pathPng = generatePathPng(automata.getProduction().getName()
+					.concat(type));
 
 			FileWriter file = new FileWriter(pathDot);
 			file.write(generateDot(automata));
@@ -157,13 +160,17 @@ public class GraphicHelper {
 	 *            Estado a representar.
 	 */
 	private void buildNode(StringBuilder sb, Estado state) {
+		sb.append(" " + state.getValue());
 		if (state.isAcceptation()) {
-			sb.append(" " + state.getValue());
 			sb.append(" [shape=doublecircle];\n");
 		} else {
-			sb.append(" " + state.getValue());
-			sb.append(" [shape=circle];\n");
+			if (state.isError()) {
+				sb.append(" [shape=diamond, color= red];\n");
+			} else {
+				sb.append(" [shape=circle];\n");
+			}
 		}
+
 		for (Transicion transicion : state.getTransitions()) {
 			sb.append(" " + state.getValue());
 			sb.append(" ->");

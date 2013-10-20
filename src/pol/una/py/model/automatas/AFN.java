@@ -9,6 +9,7 @@ import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.AnalizadorLexico;
 import pol.una.py.model.lexico.ProduccionBNF;
+import pol.una.py.model.lexico.algoritmos.Subconjunto;
 import pol.una.py.model.lexico.algoritmos.Thompson;
 import pol.una.py.views.grafos.GraphicHelper;
 
@@ -61,11 +62,24 @@ public class AFN extends AF {
 	}
 
 	/**
+	 * Genera el AFD equivalente utilizando la construccion de subconjunto.
+	 * 
+	 * @return
+	 * <b>AFD</b> AFD equivalente
+	 */
+	public AFD generateAFD() {
+		Subconjunto subconjunto = new Subconjunto();
+
+		return subconjunto.build(this);
+
+	}
+
+	/**
 	 * Genera el grafico del AFN.
 	 */
 	public void paint() {
 		GraphicHelper graph = new GraphicHelper();
-		graph.graph(this);
+		graph.graph(this, "AFN");
 	}
 
 }

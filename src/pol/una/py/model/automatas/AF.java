@@ -37,6 +37,14 @@ public class AF {
 		getTable().addEstado(state);
 	}
 
+	/**
+	 * Verifica si un determinado estado se encuentra en la tabla de transición.
+	 * 
+	 * @param value
+	 *            Valor del estado
+	 * @return <b>true</b> Si el estado se encuentra en la tabla de
+	 *         transición</br> <b>false</b> Caso contrario.
+	 */
 	public boolean containState(int value) {
 		return getTable().containState(value);
 	}
@@ -46,7 +54,9 @@ public class AF {
 	 * retorna dicho estado.
 	 * 
 	 * @param value
-	 * @return
+	 *            Valor del estado
+	 * @return <b>Estado</b> Estado </br><b>null</b> Si el estado no se
+	 *         encuentra en la tabla.
 	 */
 	public Estado getState(int value) {
 		return getTable().getState(value);
