@@ -45,15 +45,29 @@ public class TablaTransicion {
 	 * retorna dicho estado.
 	 * 
 	 * @param value
-	 * @return
+	 *            Valor del estado
+	 * @return <b>Estado</b>Estado </br><b>null</b>Si el estado no se encuentra
+	 *         en la tabla.
 	 */
 	public Estado getState(int value) {
-		if(containState(value)){
-			return states.get(value);
+		if (containState(value)) {
+			for (Estado state : states) {
+				if (state.getValue() == value) {
+					return state;
+				}
+			}
 		}
 		return null;
 	}
 
+	/**
+	 * Verifica si un determinado estado se encuentra en la tabla de transición.
+	 * 
+	 * @param value
+	 *            Valor del estado
+	 * @return <b>true</b> Si el estado se encuentra en la tabla de
+	 *         transición</br> <b>false</b> Caso contrario.
+	 */
 	public boolean containState(int value) {
 		for (Estado state : states) {
 			if (state.getValue() == value) {
@@ -97,10 +111,12 @@ public class TablaTransicion {
 		sb.append("Estado - Transiciones \n");
 		Collections.sort(states, new Comparable());
 		for (Estado estado : states) {
-			sb.append("  " + estado.getValue() + "    - ");
-			for (Transicion transicion : estado.getTransitions()) {
-				sb.append("(" + transicion.getSymbol() + ")"
-						+ transicion.getDestination().getValue());
+			if (!estado.isError()) {
+				sb.append("  " + estado.getValue() + "    - ");
+				for (Transicion transicion : estado.getTransitions()) {
+					sb.append("(" + transicion.getSymbol() + ")"
+							+ transicion.getDestination().getValue());
+				}
 			}
 			sb.append("\n");
 		}

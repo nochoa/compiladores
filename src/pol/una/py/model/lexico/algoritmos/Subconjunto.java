@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pol.una.py.model.automatas.AF;
+import pol.una.py.model.automatas.AFD;
 import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Comparable;
 import pol.una.py.model.base.Estado;
@@ -29,33 +29,34 @@ import pol.una.py.model.lexico.Cerradura;
 public class Subconjunto {
 	private static final String ε = "ε";
 	private List<Cerradura> cerraduras;
-	private AF automata;
+	private AFD automata;
 
 	/**
 	 * Constructor por defecto.
 	 */
 	public Subconjunto() {
 		cerraduras = new ArrayList<Cerradura>();
-		automata = new AF();
+		automata = new AFD();
 	}
 
 	/**
 	 * Aplica el algoritmo de construcción de subconjunto para obtener a partir
 	 * de un AFN su AFD equivalente.
 	 * 
-	 * @param automata
+	 * @param afn
 	 * @return
 	 */
-	public Subconjunto build(AFN automata) {
+	public AFD build(AFN afn) {
+		automata.setProduction(afn.getProduction());
 		// Calculamos la cerradura ε para el estado inicial.
-		Cerradura cerraduraInicial = new Cerradura(0, automata.getInitState(),
-				buildCerradura(automata.getInitState()));
+		Cerradura cerraduraInicial = new Cerradura(0, afn.getInitState(),
+				buildCerradura(afn.getInitState()));
 		cerraduras.add(cerraduraInicial);
 
 		// Mientras existan cerraduras sin procesar.
 		while (isProcess()) {
-
-			for (String symbol : automata.getTable().getSymbols()) {
+			// Hallamos el subconjunto para cada simbolo
+			for (String symbol : afn.getSymbols()) {
 				if (!symbol.equals(ε)) {
 					List<Estado> states = new ArrayList<>();
 					for (Estado state : next().getEstadosAcanzables()) {
@@ -64,21 +65,24 @@ public class Subconjunto {
 								buildSubconjuntoBySymbol(state, symbol,
 										new ArrayList<Estado>()));
 					}
-					if (!states.isEmpty()) {
-						next().addSubconjunto(symbol, states);
-					}
+					next().addSubconjunto(symbol, states);
+
 				}
 			}
+			// Para cada subconjunto calculamos la cerradura
 			for (pol.una.py.model.lexico.Cerradura.Subconjunto subconjunto : next()
 					.getSubconjuntos()) {
-				addCerradura(subconjunto.getStates(),
-						buildCerradura(subconjunto.getStates()));
+				if (!subconjunto.getStates().isEmpty()) {
+					addCerradura(subconjunto.getStates(),
+							buildCerradura(subconjunto.getStates()));
+				}
 
 			}
+			// Finalizamos el proceso de la cerradura actual.
 			next().setProcess(true);
 		}
 
-		return this;
+		return buildAFD();
 
 	}
 
@@ -249,7 +253,7 @@ public class Subconjunto {
 				estadosAlcanzables);
 		boolean band = true;
 		for (Cerradura valid : cerraduras) {
-			if (valid.getCodigoUnico().equals(cerradura.getCodigoUnico())) {
+			if (valid.getCodCerradura().equals(cerradura.getCodCerradura())) {
 				band = false;
 				break;
 			}
@@ -261,18 +265,83 @@ public class Subconjunto {
 		}
 	}
 
-	private void buildAFD() {
+	/**
+	 * Contruye el AFD equivalente
+	 * 
+	 * @return <b>AFD</b> Automata finito equivalente al AFN recibido
+	 */
+	private AFD buildAFD() {
 		for (Cerradura cerradura : cerraduras) {
-			Estado estado = new Estado(cerradura.getValue());
-			estado.setAcceptation(cerradura.isAcceptation());
-			for (pol.una.py.model.lexico.Cerradura.Subconjunto simbolo : cerradura
-					.getSubconjuntos()) {
+			Estado origen = getState(cerradura);
+			Estado destino = null;
 
-				// estado.addTransition(new Transicion(estado, destination,
-				// simbolo));
+			for (pol.una.py.model.lexico.Cerradura.Subconjunto conjunto : cerradura
+					.getSubconjuntos()) {
+				String codigoUnico = conjunto.getCodCerradura();
+				// Conjunto vacio
+				if (codigoUnico.equals("{}")) {
+					destino = getStateError();
+				} else {
+					destino = getState(getCerradura(codigoUnico));
+
+				}
+				origen.addTransition(new Transicion(origen, destino, conjunto
+						.getSymbol()));
+
 			}
-			automata.getTable().addEstado(estado);
+			automata.addEstado(origen);
 		}
+		return automata;
+	}
+
+	/**
+	 * Obtiene el estado relacionado a la cerradura, esto es, si el estado ya se
+	 * encuentra en el automata retorna dicho estado, caso contrario crea un
+	 * nuevo estado.
+	 * 
+	 * @param cerradura
+	 *            Cerradura de la cual se desea obtener el estado asociado.
+	 * @return Estado asociado a la cerradura
+	 */
+	private Estado getState(Cerradura cerradura) {
+		Estado state = null;
+		// Si el estado aun no esta en el automata
+		if (!automata.containState(cerradura.getValue())) {
+			state = new Estado(cerradura.getValue());
+			state.setAcceptation(cerradura.isAcceptation());
+		} else {
+			// Si el estado ya esta en el automata
+			state = automata.getState(cerradura.getValue());
+		}
+		return state;
+	}
+
+	/**
+	 * Verifica si el aumata ya posee un estado de error y si no lo tiene crea
+	 * un estado de error y lo retorna.
+	 * 
+	 * @return
+	 */
+	private Estado getStateError() {
+		Estado state = null;
+		if (!automata.containState(cerraduras.size())) {
+			state = new Estado(cerraduras.size());
+			state.setError(true);
+			automata.addEstado(state);
+		} else {
+			state = automata.getState(cerraduras.size());
+		}
+		return state;
+	}
+
+	private Cerradura getCerradura(String codigo) {
+		for (Cerradura cerradura : cerraduras) {
+			if (cerradura.getCodConjunto().equals(codigo)) {
+				return cerradura;
+			}
+		}
+		return null;
+
 	}
 
 	/**
@@ -292,11 +361,11 @@ public class Subconjunto {
 		this.cerraduras = cerraduras;
 	}
 
-	public AF getAutomata() {
+	public AFD getAutomata() {
 		return automata;
 	}
 
-	public void setAutomata(AF automata) {
+	public void setAutomata(AFD automata) {
 		this.automata = automata;
 	}
 }

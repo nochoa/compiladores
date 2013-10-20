@@ -6,9 +6,7 @@ package pol.una.py.model.lexico;
 import java.util.ArrayList;
 import java.util.List;
 
-import pol.una.py.model.automatas.AF;
 import pol.una.py.model.base.Estado;
-import pol.una.py.model.base.Transicion;
 
 /**
  * Clase utilizada para representar cerraduras ε utilizadas para el algoritmo de
@@ -127,14 +125,24 @@ public class Cerradura {
 	}
 
 	/**
+	 * Obtiene el codigo de la cerradura, se utiliza para comparar si los
+	 * estados acanzables por una cerradura son iguales.
+	 * 
+	 * @return
+	 */
+	public String getCodCerradura() {
+
+		return Estado.toStringList(estadosAcanzables);
+	}
+
+	/**
 	 * Obtiene el codigo de la cerradura, se utiliza para comparar si dos
 	 * cerraduras son iguales.
 	 * 
 	 * @return
 	 */
-	public String getCodigoUnico() {
-
-		return Estado.toStringList(estadosAcanzables);
+	public String getCodConjunto() {
+		return Estado.toStringList(conjunto);
 	}
 
 	@Override
@@ -146,7 +154,7 @@ public class Cerradura {
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append("]");
 		sb.append(" - ");
-		sb.append(getCodigoUnico());
+		sb.append(getCodCerradura());
 		sb.append("\n");
 		for (Subconjunto subconjunto : subconjuntos) {
 			sb.append(subconjunto + "\n");
@@ -185,6 +193,17 @@ public class Cerradura {
 
 		public void setStates(List<Estado> states) {
 			this.states = states;
+		}
+
+		/**
+		 * Obtiene el codigo de la cerradura, se utiliza para comparar si dos
+		 * cerraduras son iguales.
+		 * 
+		 * @return
+		 */
+		public String getCodCerradura() {
+
+			return Estado.toStringList(states);
 		}
 
 		@Override

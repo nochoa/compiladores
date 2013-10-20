@@ -15,6 +15,7 @@ public class Estado {
 	private int value;
 	private boolean acceptation;
 	private boolean visited;
+	private boolean error;
 	private List<Transicion> transitions;
 
 	/**
@@ -27,6 +28,7 @@ public class Estado {
 		this.value = value;
 		this.acceptation = false;
 		this.visited = false;
+		this.error = false;
 		this.transitions = new ArrayList<Transicion>();
 	}
 
@@ -42,6 +44,7 @@ public class Estado {
 		this.value = value;
 		this.acceptation = false;
 		this.visited = false;
+		this.error = false;
 		this.transitions = transitions;
 	}
 
@@ -102,6 +105,9 @@ public class Estado {
 
 	public static String toStringList(List<Estado> states) {
 		StringBuilder sb = new StringBuilder();
+		if (states.isEmpty()) {
+			return sb.append("{}").toString();
+		}
 		sb.append("{");
 		for (Estado state : states) {
 			sb.append(state.getValue());
@@ -110,6 +116,14 @@ public class Estado {
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append("}");
 		return sb.toString();
+	}
+
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
 	}
 
 }
