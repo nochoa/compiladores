@@ -6,6 +6,7 @@ package pol.una.py.views.grafos;
 import java.io.FileWriter;
 
 import pol.una.py.model.automatas.AF;
+import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Transicion;
 
@@ -51,7 +52,7 @@ public class GraphicHelper {
 					.concat(type));
 
 			FileWriter file = new FileWriter(pathDot);
-			file.write(generateDot(automata));
+			file.write(generateDot(automata, type));
 			file.close();
 
 			// Realiza la construccion del comando en la linea de comandos esto
@@ -122,12 +123,12 @@ public class GraphicHelper {
 	 *            Automata a dibujar
 	 * @return
 	 */
-	private String generateDot(AF automata) {
+	private String generateDot(AF automata, String type) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("digraph G");
 		sb.append("\n{\n");
 		sb.append(" rankdir=LR;\n");
-		sb.append(buildNodes(automata));
+		sb.append(buildNodes(automata, type));
 		sb.append("}");
 		return sb.toString();
 	}
@@ -140,12 +141,12 @@ public class GraphicHelper {
 	 *            Automata a dibujar.
 	 * @return
 	 */
-	private String buildNodes(AF automata) {
+	private String buildNodes(AF automata, String type) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" edge [color=black];\n");
 
 		for (Estado estado : automata.getTable().getStates()) {
-			buildNode(sb, estado);
+			buildNode(sb, estado, type);
 		}
 		return sb.toString();
 
@@ -159,8 +160,9 @@ public class GraphicHelper {
 	 * @param state
 	 *            Estado a representar.
 	 */
-	private void buildNode(StringBuilder sb, Estado state) {
-		sb.append(" " + state.getValue());
+	private void buildNode(StringBuilder sb, Estado state, String type) {
+
+		sb.append(getNode(state.getValue(), type));
 		if (state.isAcceptation()) {
 			sb.append(" [shape=doublecircle];\n");
 		} else {
@@ -172,11 +174,30 @@ public class GraphicHelper {
 		}
 
 		for (Transicion transicion : state.getTransitions()) {
-			sb.append(" " + state.getValue());
+			sb.append(getNode(state.getValue(), type));
 			sb.append(" ->");
-			sb.append(transicion.getDestination().getValue());
+			sb.append(getNode(transicion.getDestination().getValue(), type));
 			sb.append(" [label=" + transicion.getSymbol() + "];\n");
 		}
+	}
+
+	/**
+	 * Si el automata es un AFN imprime el valor del estado, si es un AFD
+	 * obtiene la letra equivalente al valor del estado.
+	 * 
+	 * @param value
+	 *            Valor del estado
+	 * @param type
+	 *            Tipo del automada
+	 * @return
+	 */
+	private String getNode(int value, String type) {
+		if (type.equals("AFD")) {
+			return " " + Alfabeto.LETRAS_MAYUSCULAS.charAt(value);
+		} else {
+			return " " + value;
+		}
+
 	}
 
 }
