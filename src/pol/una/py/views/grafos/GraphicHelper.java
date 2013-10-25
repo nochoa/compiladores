@@ -195,7 +195,11 @@ public class GraphicHelper {
 		if (type.equals("AFD")) {
 			return " " + Alfabeto.LETRAS_MAYUSCULAS.charAt(value);
 		} else {
-			return " " + value;
+			if (type.equals("MIN")) {
+				return " " + Alfabeto.ROMANOS.get(value);
+			} else {
+				return " " + value;
+			}
 		}
 
 	}

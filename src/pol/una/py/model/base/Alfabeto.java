@@ -1,6 +1,7 @@
 package pol.una.py.model.base;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,7 +14,9 @@ import java.util.List;
  */
 public class Alfabeto {
 	private List<String> symbols;
-
+	public static final List<String> ROMANOS = new ArrayList<String>(
+			Arrays.asList("I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX,XXI,XXII,XXIII,XXIV,XXV,XXX"
+					.split(",")));
 	public static final String LETRAS_MINUSCULAS = "abcdefghijklmnopqrstuvwxyz";
 	public static final String LETRAS_MAYUSCULAS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final String LETRAS = LETRAS_MINUSCULAS + LETRAS_MAYUSCULAS;

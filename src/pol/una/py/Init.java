@@ -12,6 +12,7 @@ import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.BNF;
 import pol.una.py.model.lexico.ExpresionRegular;
 import pol.una.py.model.lexico.ProduccionBNF;
+import pol.una.py.model.lexico.algoritmos.Minimo.Conjunto;
 
 /**
  * Punto de entrada a la aplicación
@@ -30,7 +31,7 @@ public class Init {
 		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
 		alfabetos.put("digito", new Alfabeto(Alfabeto.DIGITOS));
 		alfabetos.put("letra", new Alfabeto(Alfabeto.LETRAS_MINUSCULAS));
-		// a(c|b)*b?(a|c)*
+		//(a|b)*abb
 		ExpresionRegular expresion1 = new ExpresionRegular("a(c|b)*b?(a|c)*");
 		// ExpresionRegular expresion2 = new ExpresionRegular("[letra]*");
 
@@ -43,14 +44,21 @@ public class Init {
 		System.out.println(bnf.toString());
 
 		for (AFN afn : bnf.process()) {
-			System.out.println(afn.toString());
+			System.out.println("------------------AFN-------------------");
+			System.out.println(afn);
 			afn.paint();
 
 			AFD sub = afn.generateAFD();
-			System.out.println(sub.toString());
+			System.out.println("------------------AFD-------------------");
+			System.out.println(sub);
 			sub.paint();
+
+			AFD min = sub.minimizar();
+			System.out.println("------------------MINIMO-------------------");
+			System.out.println(min);
 
 		}
 
 	}
+
 }
