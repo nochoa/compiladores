@@ -15,6 +15,7 @@ import java.util.List;
 public class TablaTransicion {
 	private List<Estado> states;
 	private List<String> symbols;
+	private static final String ERROR = "(Error)";
 
 	public TablaTransicion() {
 		states = new ArrayList<Estado>();
@@ -111,12 +112,15 @@ public class TablaTransicion {
 		sb.append("Estado - Transiciones \n");
 		Collections.sort(states, new Comparable());
 		for (Estado estado : states) {
+			sb.append("  " + estado.getValue() + "    - ");
 			if (!estado.isError()) {
-				sb.append("  " + estado.getValue() + "    - ");
 				for (Transicion transicion : estado.getTransitions()) {
 					sb.append("(" + transicion.getSymbol() + ")"
 							+ transicion.getDestination().getValue());
 				}
+			} else {
+				sb.append(ERROR);
+
 			}
 			sb.append("\n");
 		}
