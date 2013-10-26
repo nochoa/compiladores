@@ -3,7 +3,9 @@
  */
 package pol.una.py.model.automatas;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import pol.una.py.model.base.Comparable;
 import pol.una.py.model.base.Estado;
@@ -24,6 +26,45 @@ public class AF {
 
 	public AF() {
 		this.table = new TablaTransicion();
+	}
+
+	/**
+	 * Agrega un estado a la tabla de transiciones.
+	 * 
+	 * @param state
+	 *            Estado a agregar.
+	 */
+	public void addEstado(Estado state) {
+		getTable().addEstado(state);
+	}
+
+	/**
+	 * Verifica si un determinado estado se encuentra en la tabla de transición.
+	 * 
+	 * @param value
+	 *            Valor del estado
+	 * @return <b>true</b> Si el estado se encuentra en la tabla de
+	 *         transición</br> <b>false</b> Caso contrario.
+	 */
+	public boolean containState(int value) {
+		return getTable().containState(value);
+	}
+
+	/**
+	 * Verifica si un estado se encuentra en la tabla de transicion, de ser asi
+	 * retorna dicho estado.
+	 * 
+	 * @param value
+	 *            Valor del estado
+	 * @return <b>Estado</b> Estado </br><b>null</b> Si el estado no se
+	 *         encuentra en la tabla.
+	 */
+	public Estado getState(int value) {
+		return getTable().getState(value);
+	}
+
+	public List<String> getSymbols() {
+		return getTable().getSymbols();
 	}
 
 	/**
@@ -54,19 +95,45 @@ public class AF {
 	}
 
 	/**
-	 * Verifica si todos los estados del automata han sido visitados.
+	 * Retorna una lista con los estados no finales del automata finito.
 	 * 
-	 * @return <b>true</b> Si todos los estados han sido visitados.</br>
-	 *         <b>false</b> Si al menos un detalle aun no ha sido visitado.
+	 * @return
 	 */
-
-	public boolean visitAll() {
-		for (Estado estado : table.getStates()) {
-			if (estado.isVisited()) {
-				return false;
+	public List<Estado> getNofinales() {
+		List<Estado> noFinales = new ArrayList<Estado>();
+		for (Estado state : getStates()) {
+			if (!state.isAcceptation() && !state.isError()) {
+				noFinales.add(state);
 			}
 		}
-		return true;
+		return noFinales;
+
+	}
+
+	public Estado getError() {
+		for (Estado state : getStates()) {
+			if (state.isError()) {
+				return state;
+			}
+		}
+		return null;
+
+	}
+
+	/**
+	 * Retorna una lista con los estados finales del automata finito.
+	 * 
+	 * @return
+	 */
+	public List<Estado> getFinales() {
+		List<Estado> finales = new ArrayList<Estado>();
+		for (Estado state : getStates()) {
+			if (state.isAcceptation()) {
+				finales.add(state);
+			}
+		}
+		return finales;
+
 	}
 
 	/**
@@ -82,6 +149,10 @@ public class AF {
 
 	public TablaTransicion getTable() {
 		return table;
+	}
+
+	public List<Estado> getStates() {
+		return getTable().getStates();
 	}
 
 	public void setTable(TablaTransicion table) {

@@ -40,10 +40,11 @@ public class Thompson extends AF {
 		Estado origin = new Estado(0);
 		Estado destination = new Estado(1);
 
-		origin.addTransition(new Transicion(origin, destination, token.getValue()));
+		origin.addTransition(new Transicion(origin, destination, token
+				.getValue()));
 
-		this.getTable().addEstado(origin);
-		this.getTable().addEstado(destination);
+		this.addEstado(origin);
+		this.addEstado(destination);
 	}
 
 	public void or(Thompson thompson) {
@@ -54,10 +55,9 @@ public class Thompson extends AF {
 		thompson.resetStates(this.size() + 1);
 
 		// Conectamos el nuevo estado inicial con ambos automatas.
-		newInit.addTransition(new Transicion(newInit, getInitState(),
+		newInit.addTransition(new Transicion(newInit, getInitState(), ε));
+		newInit.addTransition(new Transicion(newInit, thompson.getInitState(),
 				ε));
-		newInit.addTransition(new Transicion(newInit, thompson
-				.getInitState(), ε));
 
 		// Conectamos ambos automatas con el nuevo estado final.
 		this.getEndState().addTransition(
@@ -66,12 +66,12 @@ public class Thompson extends AF {
 				new Transicion(thompson.getEndState(), newFinal, ε));
 
 		// Agregamos los estados del automata2 en el automata1.
-		for (Estado estado : thompson.getTable().getStates()) {
-			this.getTable().addEstado(estado);
+		for (Estado estado : thompson.getStates()) {
+			this.addEstado(estado);
 		}
 
-		this.getTable().addEstado(newInit);
-		this.getTable().addEstado(newFinal);
+		this.addEstado(newInit);
+		this.addEstado(newFinal);
 
 	}
 
@@ -85,12 +85,11 @@ public class Thompson extends AF {
 
 		// Conectamos ambos automatas con una transicion ε.
 		this.getEndState().addTransition(
-				new Transicion(this.getEndState(), thompson
-						.getInitState(), ε));
+				new Transicion(this.getEndState(), thompson.getInitState(), ε));
 
 		// Agregamos los estados del automata2 en el automata1.
-		for (Estado state : thompson.getTable().getStates()) {
-			this.getTable().addEstado(state);
+		for (Estado state : thompson.getStates()) {
+			this.addEstado(state);
 		}
 
 	}
@@ -103,8 +102,7 @@ public class Thompson extends AF {
 
 		// Conectamos el nuevo estado inicial con el estado inicial del
 		// automata.
-		newInit.addTransition(new Transicion(newInit, getInitState(),
-				ε));
+		newInit.addTransition(new Transicion(newInit, getInitState(), ε));
 		// Agregamos la transicion ε para la cadena vacia.
 		newInit.addTransition(new Transicion(newInit, newFinal, ε));
 
@@ -114,11 +112,10 @@ public class Thompson extends AF {
 
 		// Agregamos la transicion ε para la repeticion.
 		this.getEndState().addTransition(
-				new Transicion(this.getEndState(), this.getInitState(),
-						ε));
+				new Transicion(this.getEndState(), this.getInitState(), ε));
 
-		this.getTable().addEstado(newInit);
-		this.getTable().addEstado(newFinal);
+		this.addEstado(newInit);
+		this.addEstado(newFinal);
 
 	}
 
@@ -130,8 +127,7 @@ public class Thompson extends AF {
 
 		// Conectamos el nuevo estado inicial con el estado inicial del
 		// automata.
-		newInit.addTransition(new Transicion(newInit, getInitState(),
-				ε));
+		newInit.addTransition(new Transicion(newInit, getInitState(), ε));
 
 		// Conectamos el estado final del automata con el nuevo estado final.
 		this.getEndState().addTransition(
@@ -141,8 +137,8 @@ public class Thompson extends AF {
 		this.getEndState().addTransition(
 				new Transicion(this.getEndState(), newFinal, ε));
 
-		getTable().addEstado(newInit);
-		getTable().addEstado(newFinal);
+		this.addEstado(newInit);
+		this.addEstado(newFinal);
 
 	}
 
@@ -154,16 +150,15 @@ public class Thompson extends AF {
 
 		// Conectamos el nuevo estado inicial con el estado inicial del
 		// automata.
-		newInit.addTransition(new Transicion(newInit, getInitState(),
-				ε));
+		newInit.addTransition(new Transicion(newInit, getInitState(), ε));
 		newInit.addTransition(new Transicion(newInit, newFinal, ε));
 
 		// Conectamos el estado final del automata con el nuevo estado final.
 		this.getEndState().addTransition(
 				new Transicion(this.getEndState(), newFinal, ε));
-
-		getTable().addEstado(newInit);
-		getTable().addEstado(newFinal);
+		
+		this.addEstado(newInit);
+		this.addEstado(newFinal);
 
 	}
 
