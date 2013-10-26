@@ -1,8 +1,12 @@
 package pol.una.py.views.menu;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,7 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
 import pol.una.py.model.base.Alfabeto;
+import pol.una.py.model.base.Pila;
+import pol.una.py.model.base.Reservadas;
+import pol.una.py.model.lexico.BNF;
+import pol.una.py.model.lexico.ExpresionRegular;
+import pol.una.py.model.lexico.ProduccionBNF;
 
 /**
  * Representa el panel principal de menu
@@ -30,17 +40,22 @@ public class PanelInput extends JPanel {
 	private static final String ELIMINARALF = "Eliminar";
 	private static final String AGREGAREXP = "Agregar";
 	private static final String ELIMINAREXP = "Eliminar";
+	private static final String PROCESAR = "Procesar";
 
 	private JPanel panelAlfabeto;
-	List<Alfabeto> alfabetos = new ArrayList<Alfabeto>();
-
 	private JPanel panelExpresionRegular;
+
+	Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
+	
+	List<ProduccionBNF> producciones = new ArrayList<>();
+
 
 	public PanelInput() {
 		builPanels();
 		this.setLayout(null);
 		this.add(panelAlfabeto);
 		this.add(panelExpresionRegular);
+		this.add(bprocesar);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -147,7 +162,7 @@ public class PanelInput extends JPanel {
 
 		baddExpr.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jBaddExprActionPerformed(evt);
+				addExpression(evt);
 			}
 		});
 
@@ -155,7 +170,7 @@ public class PanelInput extends JPanel {
 		belimarExp.setBounds(860, 25, 100, 30);
 		belimarExp.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButtonEliminarExpActionPerformed(evt);
+				deleteExpression(evt);
 			}
 		});
 		panelExpresionRegular.add(belimarExp);
@@ -181,18 +196,50 @@ public class PanelInput extends JPanel {
 		// Add the scroll pane to this window.
 		jScrollPane2.setViewportView(tablaExp);
 		// getRootPane().add(scrollPane, BorderLayout.CENTER);
-
+//		tablaExp.setCellSelectionEnabled(false);
 		panelExpresionRegular.add(tablaExp);
+		
+		
+		bprocesar = new JButton(PROCESAR);
+		bprocesar.setBounds(880, 665, 100, 25);
+		bprocesar.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					buttonprocessBNF(evt);
+				} catch (AnalizadorLexicoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
 
 	}
-
+	
+	public void buttonprocessBNF(ActionEvent e) throws AnalizadorLexicoException {
+		
+		MenuOutput menuOutput = new MenuOutput();
+		if (alfabetos.size()>1){
+		BNF bnf = new BNF("Prueba", producciones, alfabetos);
+		menuOutput.build(bnf);
+		}
+		else{
+			Alfabeto alfabeto = new Alfabeto("");
+			for (Map.Entry<String, Alfabeto> entry : alfabetos.entrySet()) {
+				alfabeto = entry.getValue();
+				break;
+			}
+			BNF bnf = new BNF("Prueba", producciones, alfabeto);
+			menuOutput.build(bnf);
+			}	
+		
+	}
+	
 	private void addAlphabet(java.awt.event.ActionEvent evt) {
 		String nomalfabeto = this.nalfabeto.getText();
 		String alfab = this.talfabeto.getText();
-		if (this.nalfabeto.getText().isEmpty()
-				|| this.talfabeto.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Complete todos los campos",
-					"Error", JOptionPane.ERROR_MESSAGE);
+		if (this.nalfabeto.getText().isEmpty() || this.talfabeto.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
 		} else if (this.nalfabeto.getText().length() > 26) {
 			JOptionPane.showMessageDialog(null,
 					"El Alfabeto solo puede tener 26 caracteres.", "Error",
@@ -202,42 +249,36 @@ public class PanelInput extends JPanel {
 					"El Alfabeto solo puede contener [a-z], [A-Z] ó [0-9].",
 					"ERROR", JOptionPane.ERROR_MESSAGE);
 		} else {
-			this.cbAlfabeto.setVisible(true);
-			this.nalfabeto.setVisible(false);
-			this.talfabeto.setEnabled(false);
-			this.nalfabeto.setEnabled(false);
+			
 			this.talfabeto.setText("");
 			this.nalfabeto.setText("");
 			this.cbAlfabeto.setSelectedIndex(0);
 			this.addRowAlphabet(nomalfabeto, alfab);
-			System.out.println("eurecaaaaaaa " + alfab);
-			Alfabeto alfabetotemp = new Alfabeto(alfab);
-			alfabetos.add(alfabetotemp);
-			System.out.println("siiiiiiii " + alfabetotemp);
+			
 		}
 
 	}
 
-	public void addRowAlphabet(String expNombre2, String expr) {
+	public void addRowAlphabet(String nomalfabeto, String alfab) {
 
 		DefaultTableModel modelo = (DefaultTableModel) this.tablaAlf.getModel();
 		Object[] fila = new Object[2];
-		fila[0] = expNombre2;
-		fila[1] = expr;
+		fila[0] = nomalfabeto;
+		fila[1] = alfab;
 		int filas = modelo.getRowCount();
 		int columnas = modelo.getColumnCount();
 		if (filas == 0) {
 			modelo.addRow(fila);
+			Alfabeto alfabetotemp = new Alfabeto(alfab);
+			alfabetos.put(nomalfabeto, alfabetotemp);
 		} else {
 			boolean agregar = true;
 			for (int i = 0; i < columnas; i++) {
 				for (int j = 0; j < filas; j++) {
-					Object o = modelo.getValueAt(j, i);
 					if (((modelo.getValueAt(j, i))).equals(fila[0])) {
 						agregar = false;
 						JOptionPane.showMessageDialog(null,
-								"Ya tiene ese alfabeto", "Error",
-								JOptionPane.ERROR_MESSAGE);
+								"Ya tiene ese alfabeto", "Error",JOptionPane.ERROR_MESSAGE);
 						break;
 					}
 				}
@@ -249,6 +290,8 @@ public class PanelInput extends JPanel {
 				modelo.addRow(fila);
 				this.talfabeto.setText("");
 				this.nalfabeto.setText("");
+				Alfabeto alfabetotemp = new Alfabeto(alfab);
+				alfabetos.put(nomalfabeto, alfabetotemp);
 			}
 		}
 	}
@@ -264,13 +307,13 @@ public class PanelInput extends JPanel {
 			break;
 		case 2:
 			this.talfabeto.setText(Alfabeto.LETRAS_MINUSCULAS);
-			this.nalfabeto.setText("Letras");
+			this.nalfabeto.setText("Letras minusculas");
 			this.talfabeto.setEnabled(false);
 			this.nalfabeto.setEnabled(false);
 			break;
 		case 3:
 			this.talfabeto.setText(Alfabeto.LETRAS_MAYUSCULAS);
-			this.nalfabeto.setText("Letras");
+			this.nalfabeto.setText("Letras mayusculas");
 			this.talfabeto.setEnabled(false);
 			this.nalfabeto.setEnabled(false);
 			break;
@@ -281,13 +324,22 @@ public class PanelInput extends JPanel {
 			this.nalfabeto.setEnabled(false);
 			break;
 
-		default:
+		case 5:
 			this.nalfabeto.setVisible(true);
 			this.cbAlfabeto.setVisible(false);
 			this.nalfabeto.setText("");
 			this.talfabeto.setText("");
 			this.talfabeto.setEnabled(true);
 			this.nalfabeto.setEnabled(true);
+			break;
+		default:
+			this.nalfabeto.setVisible(false);
+			this.cbAlfabeto.setVisible(true);
+			this.nalfabeto.setText("");
+			this.talfabeto.setText("");
+			this.talfabeto.setEnabled(false);
+			this.nalfabeto.setEnabled(false);
+			break;
 		}
 	}
 
@@ -297,15 +349,16 @@ public class PanelInput extends JPanel {
 					.getModel();
 			int filas = temp.getRowCount();
 			if (filas == 0) {
-				JOptionPane.showMessageDialog(null, "La tabla esta vacia",
-						"Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "La tabla esta vacia", "Error", JOptionPane.ERROR_MESSAGE);
 			} else if (this.tablaAlf.getSelectedRow() == -1) {
-				JOptionPane.showMessageDialog(null, "Seleccione una fila",
-						"Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Seleccione una fila","Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				int fila = this.tablaAlf.getSelectedRow();
+				String keydel = (String) temp.getValueAt(fila, 0);
 				temp.removeRow(fila);
+				alfabetos.remove(keydel);
 			}
+			
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			;
@@ -314,7 +367,7 @@ public class PanelInput extends JPanel {
 
 	// /////////////////////////////Expresion
 
-	private void jBaddExprActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
+	private void addExpression(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
 
 		String derecho = this.tladoder.getText();
 		String izquierdo = this.tladoizq.getText();
@@ -322,15 +375,19 @@ public class PanelInput extends JPanel {
 				|| this.tladoder.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Complete todos los campos",
 					"Error", JOptionPane.ERROR_MESSAGE);
-		} else {
+		} 
+		else if(!balanced(derecho)){
+			JOptionPane.showMessageDialog(null, "Parentesis desbalanceados","Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else{
 			this.tladoder.setText("");
 			this.tladoizq.setText("");
-			this.agregarFilaExpr(izquierdo, derecho);
+			this.addRowExpression(izquierdo, derecho);
 		}
 
 	}
 
-	public void agregarFilaExpr(String izquierdo, String derecho) {
+	public void addRowExpression(String izquierdo, String derecho) {
 
 		DefaultTableModel modelo = (DefaultTableModel) this.tablaExp.getModel();
 		Object[] fila = new Object[2];
@@ -339,94 +396,149 @@ public class PanelInput extends JPanel {
 		int filas = modelo.getRowCount();
 		int columnas = modelo.getColumnCount();
 		boolean nochar = true;
-		for (int i = 0; i < alfabetos.size(); i++) {
-			System.out.println("aaaaaaaaa " + alfabetos.get(i));
-			if (!alfabetos.get(i).pertenece(derecho)) {
-				nochar = false;
-
-				JOptionPane.showMessageDialog(null,
-						"No se encuentra en el alfabeto", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				break;
-			}
-
-		}
-
-		if (filas == 0) {
-			if (nochar) {
-				modelo.addRow(fila);
-			}
-
-		} else {
-			boolean agregar = true;
-			for (int i = 0; i < columnas; i++) {
-				for (int j = 0; j < filas; j++) {
-					Object o = modelo.getValueAt(j, i);
-					if (((modelo.getValueAt(j, i))).equals(fila[0])) {
-						agregar = false;
-						JOptionPane.showMessageDialog(this, "Ya existe");
-						break;
-					}
-				}
-				if (agregar == false) {
+		for (int b = 0; b < derecho.length(); b++) {
+			String value = Character.toString(derecho.charAt(b));
+			if (value.equals("[")){
+				String tok = new String();
+				int inicio = b;
+				int fin = derecho.indexOf("]", b);
+				tok = derecho.substring(inicio + 1, fin);
+				b = b + tok.length() + 1;
+				if(!search(tok)){
+					nochar = false;
 					break;
 				}
 			}
-			if (agregar && nochar) {
+			else if (!Reservadas.isValid(value)){
+				if(!searchC(value)){
+					nochar = false;
+					break;
+				}
+			}
+		}
+
+		if (nochar){
+			if (filas == 0) {
 				modelo.addRow(fila);
+				ExpresionRegular expresion1 = new ExpresionRegular(derecho);
+				producciones.add(new ProduccionBNF(izquierdo, expresion1));
 				this.tladoder.setText("");
 				this.tladoizq.setText("");
+			} else {
+				boolean agregar = true;
+				for (int i = 0; i < columnas; i++) {
+					for (int j = 0; j < filas; j++) {
+						if (((modelo.getValueAt(j, i))).equals(fila[0])) {
+							agregar = false;
+							JOptionPane.showMessageDialog(this, "Ya existe");
+							break;
+						}
+					}
+					if (agregar == false) {
+						break;
+					}
+				}
+				if (agregar) {
+					modelo.addRow(fila);
+					ExpresionRegular expresion1 = new ExpresionRegular(derecho);
+					producciones.add(new ProduccionBNF(izquierdo, expresion1));
+					this.tladoder.setText("");
+					this.tladoizq.setText("");
+				}
 			}
+		}
+		else{
+			JOptionPane.showMessageDialog(null,"No se encuentra en el alfabeto", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
-	private void jButtonEliminarExpActionPerformed(
+	private void deleteExpression(
 			java.awt.event.ActionEvent evt) {
 		try {
-			DefaultTableModel temp = (DefaultTableModel) tablaExp.getModel();
-			temp.removeRow(tablaExp.getSelectedRow());
+			DefaultTableModel temp = (DefaultTableModel) this.tablaExp.getModel();
+			int filas = temp.getRowCount();
+			if (filas == 0) {
+				JOptionPane.showMessageDialog(null, "La tabla esta vacia", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (this.tablaExp.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(null, "Seleccione una fila","Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				int fila = this.tablaExp.getSelectedRow();
+				String keydel = (String) temp.getValueAt(fila, 0);
+				temp.removeRow(fila);
+				producciones.remove(fila);
+			}
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			;
 		}
 	}
 
-	// ////Para procesar la entrada
-	public void procesarEntrada() {
-
-		// DefaultTableModel modelo = (DefaultTableModel)
-		// this.tablaExp.getModel();
-		// Object[] fila = new Object[2];
-		// fila[0] = izquierdo;
-		// fila[1] = derecho;
-		// int filas = modelo.getRowCount();
-		// int columnas = modelo.getColumnCount();
-		// if (filas == 0) {
-		// modelo.addRow(fila);
-		// } else {
-		// boolean agregar = true;
-		// for (int i = 0; i < columnas; i++) {
-		// for (int j = 0; j < filas; j++) {
-		// Object o = modelo.getValueAt(j, i);
-		// if (((modelo.getValueAt(j, i))).equals(fila[0])) {
-		// agregar = false;
-		// JOptionPane.showMessageDialog(this, "Ya existe");
-		// break;
-		// }
-		// }
-		// if (agregar == false) {
-		// break;
-		// }
-		// }
-		// if (agregar == true) {
-		// modelo.addRow(fila);
-		// this.tladoder.setText("");
-		// this.tladoizq.setText("");
-		// }
-		// }
-
+	public boolean search( String tok){
+		DefaultTableModel temp = (DefaultTableModel) tablaAlf.getModel();
+		for (int i=0; i<temp.getRowCount();i++){
+			if((((temp.getValueAt(i, 0))).equals(tok))){
+				return true;
+			}
+		}
+		return false;
 	}
+	
+	public boolean searchC( String value){
+		DefaultTableModel temp = (DefaultTableModel) tablaAlf.getModel();
+		boolean ban = false;
+		for (int a = 0; a < temp.getRowCount(); a++) {
+			Alfabeto alfabeto = new Alfabeto ( (String) temp.getValueAt(a, 1));
+			if(alfabeto.pertenece(value)){
+				ban = true;
+				break;
+			}
+		}
+		if (ban)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean balanced( String ladoderecho ) {
+        Pila pila1;  
+    	pila1 = new Pila();    
+    	String cadena = ladoderecho;
+    	for (int f = 0 ; f < cadena.length() ; f++)
+    	{
+    	    if (cadena.charAt(f) == '(' || cadena.charAt(f) == '[' || cadena.charAt(f) == '{') {
+    	    	pila1.insertar(cadena.charAt(f));
+    	    } else {
+    	    	if (cadena.charAt(f)==')') {
+    	    	    if (pila1.extraer()!='(') {
+    	    	        return false;
+    	    	    }
+    	     	} else {
+    	    	    if (cadena.charAt(f)==']') {
+    	    	        if (pila1.extraer()!='[') {
+    	    	            return false;
+    	    	        }
+    	    	    } else {
+    	    	        if (cadena.charAt(f)=='}') {
+    	    	            if (pila1.extraer()!='{') {
+    	    	                return false;
+    	    	            }
+    	    	        }
+    	    	    }
+    	        }
+   	    }   
+        }
+    	if (pila1.vacia()) {
+    	    return true;
+    	} else {
+   	    return false;
+    	}
+    }
 
+	
+	
+	
+	
+	
 	// Panel Alfabeto
 	public javax.swing.JComboBox cbAlfabeto;
 	private javax.swing.JButton baddAlfabeto;
@@ -443,5 +555,6 @@ public class PanelInput extends JPanel {
 	private javax.swing.JTable tablaExp;
 	private javax.swing.JScrollPane jScrollPane2;
 	private javax.swing.JButton belimarExp;
-
+	
+	public javax.swing.JButton bprocesar;
 }

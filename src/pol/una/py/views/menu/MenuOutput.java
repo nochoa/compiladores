@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
+import pol.una.py.model.lexico.BNF;
 import pol.una.py.views.Login;
 
 /**
@@ -27,15 +29,15 @@ public class MenuOutput {
 	/**
 	 * Construye el menu de salida
 	 */
-	public MenuOutput build() {
+	public MenuOutput build(BNF bnf) throws AnalizadorLexicoException{
 		menu = new JFrame();
 		menu.setTitle(TITLE);
 		menu.setBounds(200, 10, 1000, 720);
 		menu.setResizable(false);
-
-		panel = new PanelOutput();
+		
+		panel = new PanelOutput(bnf);
 		menu.add(panel);
-
+		
 		panel.add(builButtonReiniciar());
 		panel.add(builButtonSalir());
 		menu.setVisible(true);
