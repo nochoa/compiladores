@@ -106,6 +106,9 @@ public class CodeGenerator {
 		code.append(getValidFinal());
 		code.append(T_TAB + "System.out.println(\"Cadena valida\")"
 				+ END_OF_LINE);
+		code.append(D_TAB + "} else " + OPEN);
+		code.append(T_TAB + "System.out.println(\"Cadena no valida\")"
+				+ END_OF_LINE);
 		code.append(D_TAB + CLOSE);
 		code.append(TAB + CLOSE);
 		code.append(ENTER);
