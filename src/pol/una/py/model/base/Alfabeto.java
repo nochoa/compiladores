@@ -36,7 +36,7 @@ public class Alfabeto {
 	public boolean pertenece(String value) {
 		return symbols.contains(value);
 	}
-
+	
 	public void setSymbols(List<String> symbols) {
 		this.symbols = symbols;
 	}
@@ -57,5 +57,12 @@ public class Alfabeto {
 		sb.append("}");
 		return sb.toString();
 	}
-
+	
+	public String arrayByString() {
+		StringBuilder sb = new StringBuilder();
+		for (String symbol : symbols) {
+			sb.append(symbol);
+		}
+		return sb.toString();
+	}
 }

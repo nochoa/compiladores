@@ -18,7 +18,7 @@ import pol.una.py.model.base.Alfabeto;
  * 
  */
 public class BNF {
-	private List<ProduccionBNF> productions;
+	public List<ProduccionBNF> productions;
 	private String name;
 
 	private Alfabeto alphabet;
@@ -102,6 +102,38 @@ public class BNF {
 
 		}
 		return aRet;
+	}
+
+	public ProduccionBNF getProduccion(String name) {
+		for (ProduccionBNF produccion : getProductions()) {
+			if (produccion.getName().equals(name)) {
+				return produccion;
+			}
+		}
+		return null;
+	}
+
+	public AFN processProduction(ProduccionBNF production) {
+
+		if (oneAlphabet) {
+			try {
+				return new AFN(production, alphabet);
+			} catch (AnalizadorLexicoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+
+		} else {
+			try {
+				return new AFN(production, alphabets);
+			} catch (AnalizadorLexicoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
+
 	}
 
 	public String getName() {
