@@ -3,6 +3,7 @@
  */
 package pol.una.py.model.automatas;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,19 +95,45 @@ public class AF {
 	}
 
 	/**
-	 * Verifica si todos los estados del automata han sido visitados.
+	 * Retorna una lista con los estados no finales del automata finito.
 	 * 
-	 * @return <b>true</b> Si todos los estados han sido visitados.</br>
-	 *         <b>false</b> Si al menos un detalle aun no ha sido visitado.
+	 * @return
 	 */
-
-	public boolean visitAll() {
-		for (Estado estado : table.getStates()) {
-			if (estado.isVisited()) {
-				return false;
+	public List<Estado> getNofinales() {
+		List<Estado> noFinales = new ArrayList<Estado>();
+		for (Estado state : getStates()) {
+			if (!state.isAcceptation() && !state.isError()) {
+				noFinales.add(state);
 			}
 		}
-		return true;
+		return noFinales;
+
+	}
+
+	public Estado getError() {
+		for (Estado state : getStates()) {
+			if (state.isError()) {
+				return state;
+			}
+		}
+		return null;
+
+	}
+
+	/**
+	 * Retorna una lista con los estados finales del automata finito.
+	 * 
+	 * @return
+	 */
+	public List<Estado> getFinales() {
+		List<Estado> finales = new ArrayList<Estado>();
+		for (Estado state : getStates()) {
+			if (state.isAcceptation()) {
+				finales.add(state);
+			}
+		}
+		return finales;
+
 	}
 
 	/**

@@ -30,48 +30,6 @@ public class AFD extends AF {
 		graph.graph(this, "AFD");
 	}
 
-	/**
-	 * Retorna una lista con los estados no finales del automata finito.
-	 * 
-	 * @return
-	 */
-	public List<Estado> getNofinales() {
-		List<Estado> noFinales = new ArrayList<Estado>();
-		for (Estado state : getStates()) {
-			if (!state.isAcceptation() && !state.isError()) {
-				noFinales.add(state);
-			}
-		}
-		return noFinales;
-
-	}
-
-	public Estado getError() {
-		for (Estado state : getStates()) {
-			if (state.isError()) {
-				return state;
-			}
-		}
-		return null;
-
-	}
-
-	/**
-	 * Retorna una lista con los estados finales del automata finito.
-	 * 
-	 * @return
-	 */
-	public List<Estado> getFinales() {
-		List<Estado> finales = new ArrayList<Estado>();
-		for (Estado state : getStates()) {
-			if (state.isAcceptation()) {
-				finales.add(state);
-			}
-		}
-		return finales;
-
-	}
-
 	public AFD minimizar() {
 		Minimo minimo = new Minimo(this);
 		AFD aRet = minimo.build();
