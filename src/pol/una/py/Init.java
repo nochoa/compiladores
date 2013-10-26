@@ -10,9 +10,10 @@ import pol.una.py.model.automatas.AFD;
 import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.BNF;
+import pol.una.py.model.lexico.CodeGenerator;
 import pol.una.py.model.lexico.ExpresionRegular;
 import pol.una.py.model.lexico.ProduccionBNF;
-import pol.una.py.model.lexico.algoritmos.Minimo.Conjunto;
+import pol.una.py.views.grafos.GraphicHelper;
 
 /**
  * Punto de entrada a la aplicación
@@ -31,8 +32,9 @@ public class Init {
 		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
 		alfabetos.put("digito", new Alfabeto(Alfabeto.DIGITOS));
 		alfabetos.put("letra", new Alfabeto(Alfabeto.LETRAS_MINUSCULAS));
-		//(a|b)*abb
-		ExpresionRegular expresion1 = new ExpresionRegular("a(c|b)*b?(a|c)*");
+		// (a|b)*abb
+		// a(c|b)*b?(a|c)*
+		ExpresionRegular expresion1 = new ExpresionRegular("(a|b)*abb");
 		// ExpresionRegular expresion2 = new ExpresionRegular("[letra]*");
 
 		List<ProduccionBNF> producciones = new ArrayList<>();
@@ -57,8 +59,28 @@ public class Init {
 			System.out.println("------------------MINIMO-------------------");
 			System.out.println(min);
 
+			GraphicHelper graphicHelper = new GraphicHelper();
+			int stateActual = min.getInitState().getValue();
+			stateActual = graphicHelper.simulate(min, "a", stateActual);
+			if (stateActual == -1) {
+				System.out.println("Cadena no valida");
+			} else {
+				stateActual = graphicHelper.simulate(min, "a", stateActual);
+				if (stateActual == -1) {
+					System.out.println("Cadena no valida");
+				} else {
+					stateActual = graphicHelper.simulate(min, "c", stateActual);
+					if (stateActual == -1) {
+						System.out.println("Cadena no valida");
+					} else {
+						System.out.println("Cadena valida");
+					}
+				}
+			}
+			CodeGenerator generator = new CodeGenerator(min);
+			generator.generate();
+
 		}
 
 	}
-
 }

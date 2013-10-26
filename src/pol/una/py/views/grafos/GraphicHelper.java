@@ -4,10 +4,12 @@
 package pol.una.py.views.grafos;
 
 import java.io.FileWriter;
+import java.util.List;
 
 import pol.una.py.model.automatas.AF;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.base.Estado;
+import pol.una.py.model.base.Extension;
 import pol.una.py.model.base.Transicion;
 
 /**
@@ -22,8 +24,6 @@ import pol.una.py.model.base.Transicion;
 public class GraphicHelper {
 	// Directorio donde seran generados los graficos.
 	private final static String PATH = "/home/nochoa/Documentos/desarrollo/graphviz/";
-	private final static String DOT = ".dot";
-	private final static String PNG = ".png";
 
 	/**
 	 * Genera el gráfico de un automata finito.
@@ -32,6 +32,46 @@ public class GraphicHelper {
 	 */
 	public void graph(AF automata, String type) {
 		paint(automata, type);
+	}
+
+	/**
+	 * Simula la ejecucion de un automata.
+	 * 
+	 * @param automata
+	 * @param input
+	 *            Character de entrada
+	 * @param actual
+	 *            Estado actual de la simulacion
+	 * @return
+	 */
+	public int simulate(AF automata, String input, int actual) {
+		// Pintamos el estado actual
+		Estado stateActual = automata.getState(actual);
+		stateActual.setFilled(true);
+
+		List<Estado> alcanzables = stateActual.getStatesBySymbol(input);
+		if (!alcanzables.isEmpty()) {
+			// Obtenemos el siguiente estado
+			Estado stateNext = alcanzables.get(0);
+			stateNext.setFilled(true);
+
+			// Generamos la imagen de la simulacion
+			GraphicHelper gh = new GraphicHelper();
+			gh.graph(automata, "SIMULATE");
+
+			// Si el estado alcanzable es un estado de error, la cadena no es
+			// valida
+			if (stateNext.isError()) {
+				return -1;
+			} else {
+				return stateNext.getValue();
+			}
+		} else {
+			// Si no hay una transicion para el caracter de entrada la cadena no
+			// es valida
+			return -1;
+		}
+
 	}
 
 	/**
@@ -95,7 +135,7 @@ public class GraphicHelper {
 	 */
 	private String generatePathDot(String identificador) {
 		StringBuilder sb = generatePath(identificador);
-		sb.append(DOT);
+		sb.append(Extension.DOT.getValue());
 		return sb.toString();
 
 	}
@@ -110,7 +150,7 @@ public class GraphicHelper {
 	 */
 	private String generatePathPng(String identificador) {
 		StringBuilder sb = generatePath(identificador);
-		sb.append(PNG);
+		sb.append(Extension.PNG.getValue());
 		return sb.toString();
 
 	}
@@ -163,13 +203,19 @@ public class GraphicHelper {
 	private void buildNode(StringBuilder sb, Estado state, String type) {
 
 		sb.append(getNode(state.getValue(), type));
+		sb.append("[");
+		if (state.isFilled()) {
+			;
+			sb.append("style=filled,color=green,");
+		}
+		// " [style=filled, shape=doublecircle, color=yellow]"
 		if (state.isAcceptation()) {
-			sb.append(" [shape=doublecircle];\n");
+			sb.append(" shape=doublecircle];\n");
 		} else {
 			if (state.isError()) {
-				sb.append(" [shape=diamond, color= red];\n");
+				sb.append(" shape=diamond, color= red];\n");
 			} else {
-				sb.append(" [shape=circle];\n");
+				sb.append(" shape=circle];\n");
 			}
 		}
 
@@ -195,7 +241,7 @@ public class GraphicHelper {
 		if (type.equals("AFD")) {
 			return " " + Alfabeto.LETRAS_MAYUSCULAS.charAt(value);
 		} else {
-			if (type.equals("MIN")) {
+			if (type.equals("MIN")||type.equals("SIMULATE")) {
 				return " " + Alfabeto.ROMANOS.get(value);
 			} else {
 				return " " + value;

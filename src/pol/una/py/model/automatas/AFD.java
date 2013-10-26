@@ -3,10 +3,6 @@
  */
 package pol.una.py.model.automatas;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import pol.una.py.model.base.Estado;
 import pol.una.py.model.lexico.algoritmos.Minimo;
 import pol.una.py.views.grafos.GraphicHelper;
 

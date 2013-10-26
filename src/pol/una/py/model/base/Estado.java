@@ -14,9 +14,9 @@ import java.util.List;
 public class Estado {
 	private int value;
 	private boolean acceptation;
-	private boolean visited;
 	private boolean error;
 	private List<Transicion> transitions;
+	private boolean filled;
 
 	/**
 	 * Crea un estado sin transiciones.
@@ -27,7 +27,6 @@ public class Estado {
 		super();
 		this.value = value;
 		this.acceptation = false;
-		this.visited = false;
 		this.error = false;
 		this.transitions = new ArrayList<Transicion>();
 	}
@@ -43,7 +42,6 @@ public class Estado {
 		super();
 		this.value = value;
 		this.acceptation = false;
-		this.visited = false;
 		this.error = false;
 		this.transitions = transitions;
 	}
@@ -62,14 +60,6 @@ public class Estado {
 			}
 		}
 		return list;
-	}
-
-	public boolean isVisited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
 	}
 
 	public int getValue() {
@@ -124,6 +114,14 @@ public class Estado {
 
 	public void setError(boolean error) {
 		this.error = error;
+	}
+
+	public boolean isFilled() {
+		return filled;
+	}
+
+	public void setFilled(boolean filled) {
+		this.filled = filled;
 	}
 
 }
