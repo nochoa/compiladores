@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pol.una.py.model.automatas.AF;
+import pol.una.py.model.automatas.AFD;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Extension;
 import pol.una.py.model.base.Transicion;
@@ -89,8 +90,9 @@ public class CodeGenerator {
 
 		// Validamos la cadena ingresada
 		code.append(TAB + "public static void validate(String cadena)" + OPEN);
-		code.append(D_TAB + "int stateActual = "
-				+ automata.getInitState().getValue() + END_OF_LINE);
+		code.append(D_TAB + "//Partimos del estado inicial" + END_OF_LINE);
+		code.append(D_TAB + "int stateActual = " + getInitState() + END_OF_LINE);
+		code.append(D_TAB + "//Recorremos la cadena ingresada" + END_OF_LINE);
 		code.append(D_TAB + "for (int i = 0; i < cadena.length(); i++)" + OPEN);
 		code.append(T_TAB
 				+ "String character = String.valueOf(cadena.charAt(i))"
@@ -103,6 +105,9 @@ public class CodeGenerator {
 		code.append(T_TAB + TAB + "return" + END_OF_LINE);
 		code.append(T_TAB + CLOSE);
 		code.append(D_TAB + CLOSE);
+		code.append(D_TAB
+				+ "//Si el estado alcanzado es un estado final la cadena es valida"
+				+ END_OF_LINE);
 		code.append(getValidFinal());
 		code.append(T_TAB + "System.out.println(\"Cadena valida\")"
 				+ END_OF_LINE);
@@ -133,6 +138,26 @@ public class CodeGenerator {
 
 	}
 
+	/**
+	 * Obtiene el estado inicial del automata, debido a que si la generacion
+	 * recibe un AFD minimo el estad inicial podria no ser el estado con valor
+	 * 0.
+	 * 
+	 * @return
+	 */
+	private int getInitState() {
+		if (automata instanceof AFD) {
+			return ((AFD) automata).getInitMin();
+		} else {
+			return automata.getInitState().getValue();
+		}
+	}
+
+	/**
+	 * Crea una sentencia para cada uno de los estados finales del automata.
+	 * 
+	 * @return
+	 */
 	private String getValidFinal() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(D_TAB + "if(");
@@ -147,6 +172,11 @@ public class CodeGenerator {
 		return sb.toString();
 	}
 
+	/**
+	 * Crea el switch para recorrer cada uno de los estados del automata.
+	 * 
+	 * @return
+	 */
 	private String getSwitchState() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(D_TAB + "switch (state)" + OPEN);
@@ -177,6 +207,11 @@ public class CodeGenerator {
 		return sb.toString();
 	}
 
+	/**
+	 * Genera el path donde sera generado el codigo.
+	 * 
+	 * @return
+	 */
 	private String getPath() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(PATH);
@@ -186,6 +221,11 @@ public class CodeGenerator {
 
 	}
 
+	/**
+	 * Genera el nombre de la clase a ser utilizado para el codigo generado.
+	 * 
+	 * @return
+	 */
 	private String getNameClase() {
 		StringBuilder name = new StringBuilder(automata.getProduction()
 				.getName());
