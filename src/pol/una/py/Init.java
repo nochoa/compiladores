@@ -1,5 +1,6 @@
 package pol.una.py;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import pol.una.py.views.menu.MenuInput;
  */
 public class Init {
 	public static void main(String[] args) throws AnalizadorLexicoException {
+		removeFiles();
 		// Login.call();
 		MenuInput menu = new MenuInput();
 		menu.build();
@@ -81,6 +83,27 @@ public class Init {
 			CodeGenerator generator = new CodeGenerator(min);
 			generator.generate();
 
+		}
+
+	}
+
+	private static void removeFiles() {
+		String PATH = "/home/nochoa/Documentos/desarrollo/graphviz";
+
+		File directorio = new File(PATH);
+		File file;
+		if (directorio.isDirectory()) {
+			String[] files = directorio.list();
+			if (files.length > 0) {
+				for (String archivo : files) {
+					file = new File(PATH + File.separator + archivo);
+					file.delete();
+					file.deleteOnExit();
+
+				}
+			}
+			System.out
+					.println("Cantidad de archivos borrados: " + files.length);
 		}
 
 	}
