@@ -20,7 +20,6 @@ import pol.una.py.model.base.Alfabeto;
 public class BNF {
 	public List<ProduccionBNF> productions;
 	private String name;
-
 	private Alfabeto alphabet;
 	private Map<String, Alfabeto> alphabets;
 	private boolean oneAlphabet;

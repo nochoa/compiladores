@@ -44,6 +44,7 @@ public class PanelOutput extends JPanel {
 		this.add(panelGrafico);
 	}
 
+	@SuppressWarnings("serial")
 	private void builPanels() {
 
 		jScrollPane1 = new javax.swing.JScrollPane();
@@ -64,7 +65,8 @@ public class PanelOutput extends JPanel {
 		jScrollPane1.setViewportView(tableAlf);
 
 		tableExpr.setModel(new javax.swing.table.DefaultTableModel(
-				new Object[][] {}, new String[] { "Expresion", "Regular" }) {
+				new Object[][] {}, new String[] { "Identificador",
+						"Expresión Regular" }) {
 			Class[] types = new Class[] { java.lang.String.class,
 					java.lang.String.class };
 
@@ -110,12 +112,27 @@ public class PanelOutput extends JPanel {
 								javax.swing.GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(49, Short.MAX_VALUE)));
 
-		DefaultTableModel modelo = (DefaultTableModel) this.tableExpr
+		DefaultTableModel modelAlfabeto = (DefaultTableModel) this.tableAlf
 				.getModel();
 		Object[] fila = new Object[2];
+		if (bnf.isOneAlphabet()) {
+			fila[0] = bnf.getAlphabet().getName();
+			fila[1] = bnf.getAlphabet()	;
+			modelAlfabeto.addRow(fila);
+		} else {
+			Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
+			alfabetos = bnf.getAlphabets();
+
+			for (Map.Entry<String, Alfabeto> entry : alfabetos.entrySet()) {
+				fila[0] = entry.getKey();
+				fila[1] = entry.getValue();
+				modelAlfabeto.addRow(fila);
+			}
+		}
+
+		DefaultTableModel modelo = (DefaultTableModel) this.tableExpr
+				.getModel();
 		List<ProduccionBNF> producciones = new ArrayList<>();
-		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
-		alfabetos = bnf.getAlphabets();
 		producciones = bnf.productions;
 
 		for (ProduccionBNF production : producciones) {

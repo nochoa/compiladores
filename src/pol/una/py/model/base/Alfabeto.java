@@ -13,6 +13,7 @@ import java.util.List;
  * 
  */
 public class Alfabeto {
+	private String name;
 	private List<String> symbols;
 	public static final List<String> ROMANOS = new ArrayList<String>(
 			Arrays.asList("I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX,XXI,XXII,XXIII,XXIV,XXV,XXX"
@@ -67,5 +68,13 @@ public class Alfabeto {
 			sb.append(symbol);
 		}
 		return sb.toString();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
