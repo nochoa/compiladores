@@ -64,8 +64,7 @@ public class AFN extends AF {
 	/**
 	 * Genera el AFD equivalente utilizando la construccion de subconjunto.
 	 * 
-	 * @return
-	 * <b>AFD</b> AFD equivalente
+	 * @return <b>AFD</b> AFD equivalente
 	 */
 	public AFD generateAFD() {
 		Subconjunto subconjunto = new Subconjunto();
@@ -75,9 +74,12 @@ public class AFN extends AF {
 	}
 
 	/**
-	 * Genera el grafico del AFN.
+	 * Genera el grafico del AFN. Antes de graficar indicamos cual es el estado
+	 * inicial de manera a que el mismo pueda ser diferenciado de los demas
+	 * estados.
 	 */
 	public void paint() {
+		this.getState(0).setInit(true);
 		GraphicHelper graph = new GraphicHelper();
 		graph.graph(this, "AFN");
 	}

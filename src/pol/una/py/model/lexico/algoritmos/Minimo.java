@@ -173,6 +173,15 @@ public class Minimo {
 		}
 	}
 
+	/**
+	 * Retorna el conjunto que contiene a un determinado estado.
+	 * 
+	 * @param list
+	 *            Lista de conjuntos
+	 * @param state
+	 *            Estado cuyo conjunto se desea obtener
+	 * @return Posicion del conjunto en la lista
+	 */
 	private int getGroup(List<Conjunto> list, Estado state) {
 		for (Conjunto elemento : list) {
 			if (elemento.contain(state)) {
@@ -196,6 +205,7 @@ public class Minimo {
 		Estado state = null;
 		if (!min.containState(list.get(index).getIndex())) {
 			state = new Estado(list.get(index).getIndex());
+			state.setInit(list.get(index).isInit());
 			state.setAcceptation(list.get(index).isAcceptation());
 			state.setError(list.get(index).isError());
 			min.addEstado(state);
@@ -208,10 +218,20 @@ public class Minimo {
 		return state;
 	}
 
+	/**
+	 * Retorna el estado de un determinado conjunto, si el mismo ya se encuentra
+	 * en el AFD se retorna de lo contrario se crea dicho estado y se agrega al
+	 * AFD.
+	 * 
+	 * @param element
+	 *            Conjunto
+	 * @return Estado asociado a conjunto
+	 */
 	private Estado getState(Conjunto element) {
 		Estado state = null;
 		if (!min.containState(element.getIndex())) {
 			state = new Estado(element.getIndex());
+			state.setInit(element.isInit());
 			state.setAcceptation(element.isAcceptation());
 			state.setError(element.isError());
 			min.addEstado(state);
@@ -343,6 +363,20 @@ public class Minimo {
 		public boolean isAcceptation() {
 			for (Estado state : states) {
 				if (state.isAcceptation()) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Verifica si el conjunto es un conjunto inicial.
+		 * 
+		 * @return
+		 */
+		public boolean isInit() {
+			for (Estado state : states) {
+				if (state.getValue() == 0) {
 					return true;
 				}
 			}

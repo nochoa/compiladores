@@ -60,7 +60,7 @@ public class Init {
 			System.out.println(min);
 
 			GraphicHelper graphicHelper = new GraphicHelper();
-			int stateActual = min.getInitState().getValue();
+			int stateActual = min.getInitMin();
 			stateActual = graphicHelper.simulate(min, "a", stateActual);
 			if (stateActual == -1) {
 				System.out.println("Cadena no valida");

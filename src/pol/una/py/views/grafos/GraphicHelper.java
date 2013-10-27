@@ -208,14 +208,20 @@ public class GraphicHelper {
 			;
 			sb.append("style=filled,color=green,");
 		}
-		// " [style=filled, shape=doublecircle, color=yellow]"
-		if (state.isAcceptation()) {
-			sb.append(" shape=doublecircle];\n");
+		// Pintamos el estado inicial y la figura es especial
+		if (state.isInit()) {
+			sb.append(" shape=Mcircle, color= pink];\n");
 		} else {
-			if (state.isError()) {
-				sb.append(" shape=diamond, color= red];\n");
+			// Si es un estado de aceptacion debe ser una figura especial
+			if (state.isAcceptation()) {
+				sb.append(" shape=doublecircle];\n");
 			} else {
-				sb.append(" shape=circle];\n");
+				// Si es un estado de error tambien debe ser una figura especial
+				if (state.isError()) {
+					sb.append(" shape=diamond, color= red];\n");
+				} else {
+					sb.append(" shape=circle];\n");
+				}
 			}
 		}
 
@@ -241,7 +247,7 @@ public class GraphicHelper {
 		if (type.equals("AFD")) {
 			return " " + Alfabeto.LETRAS_MAYUSCULAS.charAt(value);
 		} else {
-			if (type.equals("MIN")||type.equals("SIMULATE")) {
+			if (type.equals("MIN") || type.equals("SIMULATE")) {
 				return " " + Alfabeto.ROMANOS.get(value);
 			} else {
 				return " " + value;

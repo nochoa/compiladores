@@ -3,6 +3,7 @@
  */
 package pol.una.py.model.automatas;
 
+import pol.una.py.model.base.Estado;
 import pol.una.py.model.lexico.algoritmos.Minimo;
 import pol.una.py.views.grafos.GraphicHelper;
 
@@ -19,9 +20,12 @@ public class AFD extends AF {
 	}
 
 	/**
-	 * Genera el grafico del AFD.
+	 * Genera el grafico del AFD. Antes de graficar indicamos cual es el estado
+	 * inicial de manera a que el mismo pueda ser diferenciado de los demas
+	 * estados.
 	 */
 	public void paint() {
+		this.getState(0).setInit(true);
 		GraphicHelper graph = new GraphicHelper();
 		graph.graph(this, "AFD");
 	}
@@ -32,6 +36,23 @@ public class AFD extends AF {
 		GraphicHelper graph = new GraphicHelper();
 		graph.graph(aRet, "MIN");
 		return aRet;
+	}
+
+	/**
+	 * Metodo utilizado solo para la simulacion del AFD minimo, debido a que es
+	 * el unico caso donde es estado <b>0</b> podria no ser el estado inicial,
+	 * motivo por el cual al elaborar el minimo se indica con el atributo
+	 * <b>init</b> cual es el estado inicial.
+	 * 
+	 * @return
+	 */
+	public int getInitMin() {
+		for (Estado state : getStates()) {
+			if (state.isInit()) {
+				return state.getValue();
+			}
+		}
+		return -1;
 	}
 
 }

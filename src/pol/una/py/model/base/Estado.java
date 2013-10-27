@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Estado {
 	private int value;
+	private boolean init;
 	private boolean acceptation;
 	private boolean error;
 	private List<Transicion> transitions;
@@ -122,6 +123,14 @@ public class Estado {
 
 	public void setFilled(boolean filled) {
 		this.filled = filled;
+	}
+
+	public boolean isInit() {
+		return init;
+	}
+
+	public void setInit(boolean init) {
+		this.init = init;
 	}
 
 }
