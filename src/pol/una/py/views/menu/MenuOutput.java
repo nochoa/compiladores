@@ -20,7 +20,7 @@ import pol.una.py.views.Login;
  */
 public class MenuOutput {
 
-	private static final String TITLE = "Traducto dirigido por la sintaxis (TDS)";
+	private static final String TITLE = "Traductor dirigido por la sintaxis (TDS)";
 	private static final String REINICIAR = "Reiniciar";
 	private static final String SALIR = "Salir";
 	private JFrame menu;

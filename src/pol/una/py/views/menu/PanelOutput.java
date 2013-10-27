@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
+import pol.una.py.model.automatas.AFD;
 import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.BNF;
@@ -126,13 +127,22 @@ public class PanelOutput extends JPanel {
 						AFN pre;
 						pre = bnf.processProduction(producion);
 						System.out.println(pre.toString());
-						try {
-							pre.paint();
-							Pestanas hola = new Pestanas(pre);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						pre.paint();
+						AFD sub = pre.generateAFD();
+						sub.paint();
+						AFD min = sub.minimizar();
+				        min.paint();
+//						Pestanas hola = new Pestanas(pre);
+						final PanelProcess proc = new PanelProcess(pre);
+						
+						proc.setVisible(true);
+						proc.bvolver.addActionListener(new java.awt.event.ActionListener() {
+							public void actionPerformed(java.awt.event.ActionEvent evt) {
+//								this.setVisible(true);
+								proc.setVisible(false);
+								
+							}
+						});
 					}
 			}
 		});
@@ -164,6 +174,8 @@ public class PanelOutput extends JPanel {
 	}
 	
 	public void probando(ActionEvent e) throws AnalizadorLexicoException {
+		
+//		new PanelProcess().setVisible(true);
 //		this.setVisible(false);
 //		this.panelBNF.setVisible(false);
 //		MenuOutput menuOutput = new MenuOutput();
