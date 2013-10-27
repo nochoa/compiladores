@@ -14,6 +14,7 @@ import pol.una.py.model.lexico.CodeGenerator;
 import pol.una.py.model.lexico.ExpresionRegular;
 import pol.una.py.model.lexico.ProduccionBNF;
 import pol.una.py.views.grafos.GraphicHelper;
+import pol.una.py.views.menu.MenuInput;
 
 /**
  * Punto de entrada a la aplicación
@@ -26,15 +27,15 @@ import pol.una.py.views.grafos.GraphicHelper;
 public class Init {
 	public static void main(String[] args) throws AnalizadorLexicoException {
 		// Login.call();
-		// MenuInput menu = new MenuInput();
-		// menu.build();
+		MenuInput menu = new MenuInput();
+		menu.build();
 
 		Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
 		alfabetos.put("digito", new Alfabeto(Alfabeto.DIGITOS));
 		alfabetos.put("letra", new Alfabeto(Alfabeto.LETRAS_MINUSCULAS));
 		// (a|b)*abb
 		// a(c|b)*b?(a|c)*
-		ExpresionRegular expresion1 = new ExpresionRegular("(a|b)*abb");
+		ExpresionRegular expresion1 = new ExpresionRegular("(a|b)");
 		// ExpresionRegular expresion2 = new ExpresionRegular("[letra]*");
 
 		List<ProduccionBNF> producciones = new ArrayList<>();

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.util.List;
 
 import pol.una.py.model.automatas.AF;
+import pol.una.py.model.automatas.AFD;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Extension;
@@ -186,7 +187,7 @@ public class GraphicHelper {
 		sb.append(" edge [color=black];\n");
 
 		for (Estado estado : automata.getTable().getStates()) {
-			buildNode(sb, estado, type);
+			buildNode(automata, sb, estado, type);
 		}
 		return sb.toString();
 
@@ -200,7 +201,8 @@ public class GraphicHelper {
 	 * @param state
 	 *            Estado a representar.
 	 */
-	private void buildNode(StringBuilder sb, Estado state, String type) {
+	private void buildNode(AF automata, StringBuilder sb, Estado state,
+			String type) {
 
 		sb.append(getNode(state.getValue(), type));
 		sb.append("[");
@@ -209,7 +211,7 @@ public class GraphicHelper {
 			sb.append("style=filled,color=green,");
 		}
 		// Pintamos el estado inicial y la figura es especial
-		if (state.isInit()) {
+		if (state.getValue() == getInitState(automata, type)) {
 			sb.append(" shape=Mcircle, color= pink];\n");
 		} else {
 			// Si es un estado de aceptacion debe ser una figura especial
@@ -254,6 +256,24 @@ public class GraphicHelper {
 			}
 		}
 
+	}
+
+	/**
+	 * Obtiene el estado inicial del automata, esto es debido a que si es un AFD
+	 * minimo o una simulacion(que se hace sobre el AFD minimo) el estado con
+	 * valor <b>0</b> no necesariamente es el estado inicial como en el AFN o
+	 * AFD sin optimizacion.
+	 * 
+	 * @param automata
+	 * @param type
+	 * @return
+	 */
+	private int getInitState(AF automata, String type) {
+		if (type.equals("MIN") || type.equals("SIMULATE")) {
+			return ((AFD) automata).getInitMin();
+		} else {
+			return automata.getInitState().getValue();
+		}
 	}
 
 }

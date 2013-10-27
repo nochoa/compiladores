@@ -25,7 +25,6 @@ public class AFD extends AF {
 	 * estados.
 	 */
 	public void paint() {
-		this.getState(0).setInit(true);
 		GraphicHelper graph = new GraphicHelper();
 		graph.graph(this, "AFD");
 	}
