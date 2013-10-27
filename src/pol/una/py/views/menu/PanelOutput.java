@@ -125,8 +125,9 @@ public class PanelOutput extends JPanel {
 						ProduccionBNF producion = bnf.getProduccion(este);
 						AFN pre;
 						pre = bnf.processProduction(producion);
-						pre.toString();
+						System.out.println(pre.toString());
 						try {
+							pre.paint();
 							Pestanas hola = new Pestanas(pre);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block

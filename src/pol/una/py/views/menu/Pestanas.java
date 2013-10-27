@@ -34,7 +34,7 @@ public class Pestanas extends JFrame {
 	public Pestanas(AFN afnproc) throws IOException {
 
 		super("Produccion");
-
+		
 		setVisible(true);
 		setSize(500, 500);
 		// setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -99,8 +99,7 @@ public class Pestanas extends JFrame {
 
 		// ////termina la pestaña dos
 
-		String automata = "dos";
-		String pathPng = generatePathPng(automata);
+		String pathPng = generatePathPng(afnproc.getProduction().getName().concat("AFN"));
 
 		BufferedImage myPicture = ImageIO.read(new File(pathPng));
 		JLabel picLabel = new JLabel(new ImageIcon(myPicture));
@@ -130,6 +129,5 @@ public class Pestanas extends JFrame {
 	}
 
 	private final static String PATH = "/home/deysinalec/Documentos/graphviz/";
-	private final static String DOT = ".dot";
 	private final static String PNG = ".png";
 }
