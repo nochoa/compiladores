@@ -17,6 +17,7 @@ import pol.una.py.model.automatas.AFD;
 import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Transicion;
+import pol.una.py.model.lexico.BNF;
 import pol.una.py.model.lexico.CodeGenerator;
 import pol.una.py.views.grafos.JPanelConFondo;
 
@@ -26,9 +27,11 @@ public class PanelProcess extends javax.swing.JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	public AFN automata;
+	public BNF bnf;
 
-	public PanelProcess(AFN afn) {
+	public PanelProcess(AFN afn, BNF definicionRegular) {
 		automata = afn;
+		bnf = definicionRegular;
 		initComponents();
 	}
 
@@ -118,7 +121,7 @@ public class PanelProcess extends javax.swing.JFrame {
 		bgenerarafn.setLabel("Generar codigo");
 		bgenerarafn.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				CodeGenerator generator = new CodeGenerator(automata);
+				CodeGenerator generator = new CodeGenerator(automata, bnf);
 				generator.generate();
 			}
 		});
@@ -208,7 +211,7 @@ public class PanelProcess extends javax.swing.JFrame {
 		bgenerarafd.setLabel("Generar codigo");
 		bgenerarafd.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				CodeGenerator generator = new CodeGenerator(sub);
+				CodeGenerator generator = new CodeGenerator(sub, bnf);
 				generator.generate();
 			}
 		});
@@ -334,7 +337,7 @@ public class PanelProcess extends javax.swing.JFrame {
 		bgenerarmin.setLabel("Generar codigo");
 		bgenerarmin.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				CodeGenerator generator = new CodeGenerator(min);
+				CodeGenerator generator = new CodeGenerator(min, bnf);
 				generator.generate();
 			}
 		});

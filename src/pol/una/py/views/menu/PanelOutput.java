@@ -168,7 +168,7 @@ public class PanelOutput extends JPanel {
 					sub.minimizar();
 
 					// Pestanas hola = new Pestanas(pre);
-					final PanelProcess proc = new PanelProcess(pre);
+					final PanelProcess proc = new PanelProcess(pre, bnf);
 
 					proc.setVisible(true);
 					proc.bvolver
@@ -192,20 +192,20 @@ public class PanelOutput extends JPanel {
 
 		panelGrafico.add(bproc);
 
-		bsimular = new javax.swing.JButton(SIMULAR);
-		bsimular.setBounds(10, 25, 120, 30);
-
-		// ///LIstener del boton Simular
-		bsimular.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				try {
-					simulate(evt);
-				} catch (AnalizadorLexicoException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		panelGrafico.add(bsimular);
+//		bsimular = new javax.swing.JButton(SIMULAR);
+//		bsimular.setBounds(10, 25, 120, 30);
+//
+//		// ///LIstener del boton Simular
+//		bsimular.addActionListener(new java.awt.event.ActionListener() {
+//			public void actionPerformed(java.awt.event.ActionEvent evt) {
+//				try {
+//					simulate(evt);
+//				} catch (AnalizadorLexicoException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//		panelGrafico.add(bsimular);
 
 	}
 

@@ -25,6 +25,7 @@ import pol.una.py.model.base.Transicion;
  */
 public class CodeGenerator {
 	private AF automata;
+	private BNF bnf;
 	private List<String> imports = new ArrayList<String>();
 	private static String ENTER = "\n";
 	private static String END_OF_LINE = " ;" + ENTER;
@@ -41,8 +42,9 @@ public class CodeGenerator {
 	/**
 	 * Constructor
 	 */
-	public CodeGenerator(AF af) {
+	public CodeGenerator(AF af, BNF definicion) {
 		automata = af;
+		bnf = definicion;
 		imports.add("package pol.una.py.generations");
 		imports.add("import java.io.BufferedReader");
 		imports.add("import java.io.IOException");
@@ -186,16 +188,7 @@ public class CodeGenerator {
 			if (!state.isError()) {
 				sb.append(T_TAB + TAB + "switch (actual)" + OPEN);
 				for (Transicion transicion : state.getTransitions()) {
-					sb.append(T_TAB + D_TAB + "case\"" + transicion.getSymbol()
-							+ "\":");
-					Estado stateAlcanzable = state.getStatesBySymbol(
-							transicion.getSymbol()).get(0);
-					if (stateAlcanzable.isError()) {
-						sb.append("return -1" + END_OF_LINE);
-					} else {
-						sb.append("return " + stateAlcanzable.getValue()
-								+ END_OF_LINE);
-					}
+					sb.append(caseSymbol(transicion, state));
 				}
 				sb.append(T_TAB + TAB + CLOSE);
 			} else {
@@ -235,12 +228,64 @@ public class CodeGenerator {
 
 	}
 
+	/**
+	 * Verifica si la definicion regular posee mas de un alfabeto, de ser asi
+	 * agrega un case para cada simbolo del alfabeto, caso constrario se define
+	 * un solo case para el simbolo propio del alfabeto.
+	 * 
+	 * @param transicion
+	 * @param state
+	 * @return
+	 */
+	private StringBuilder caseSymbol(Transicion transicion, Estado state) {
+		StringBuilder sb = new StringBuilder();
+		if (bnf.isOneAlphabet()) {
+			sb.append(T_TAB + D_TAB + "case\"" + transicion.getSymbol() + "\":");
+			Estado stateAlcanzable = state.getStatesBySymbol(
+					transicion.getSymbol()).get(0);
+			if (stateAlcanzable.isError()) {
+				sb.append("return -1" + END_OF_LINE);
+			} else {
+				sb.append("return " + stateAlcanzable.getValue() + END_OF_LINE);
+			}
+		} else {
+			List<String> symbols = new ArrayList<>();
+			for (String key : bnf.getAlphabets().keySet()) {
+				if (key.equals(transicion.getSymbol())) {
+					symbols = bnf.getAlphabets().get(key).getSymbols();
+					break;
+				}
+			}
+			for (String symbol : symbols) {
+				sb.append(T_TAB + D_TAB + "case\"" + symbol + "\":");
+				Estado stateAlcanzable = state.getStatesBySymbol(
+						transicion.getSymbol()).get(0);
+				if (stateAlcanzable.isError()) {
+					sb.append("return -1" + END_OF_LINE);
+				} else {
+					sb.append("return " + stateAlcanzable.getValue()
+							+ END_OF_LINE);
+				}
+			}
+
+		}
+		return sb;
+	}
+
 	public AF getAutomata() {
 		return automata;
 	}
 
 	public void setAutomata(AF automata) {
 		this.automata = automata;
+	}
+
+	public BNF getBnf() {
+		return bnf;
+	}
+
+	public void setBnf(BNF bnf) {
+		this.bnf = bnf;
 	}
 
 }

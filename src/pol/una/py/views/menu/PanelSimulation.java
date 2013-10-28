@@ -1,5 +1,6 @@
 package pol.una.py.views.menu;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,8 +13,6 @@ import javax.swing.JOptionPane;
 
 import pol.una.py.excepciones.lexico.AnalizadorLexicoException;
 import pol.una.py.model.automatas.AFD;
-import pol.una.py.model.automatas.AFN;
-import pol.una.py.model.lexico.ProduccionBNF;
 import pol.una.py.views.grafos.GraphicHelper;
 
 public class PanelSimulation extends javax.swing.JFrame {
@@ -307,13 +306,14 @@ public class PanelSimulation extends javax.swing.JFrame {
 						"Error", JOptionPane.ERROR_MESSAGE);
 				bnext.setEnabled(false);
 			} else {
+
 				String pathPng = generatePathPng(automata.getProduction()
 						.getName().concat("SIMULATE"));
 				ImageIcon image = new ImageIcon(pathPng);
-				picLabel.setIcon(image);
-//				JLabel picLabel = new JLabel(image);
-//				panelimg.add(picLabel);
 				
+				JLabel picLabel = new JLabel(image);
+				panelimg.add(picLabel);
+
 			}
 
 		}
