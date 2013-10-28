@@ -120,7 +120,7 @@ public class PanelOutput extends JPanel {
 		Object[] fila = new Object[2];
 		if (bnf.isOneAlphabet()) {
 			fila[0] = bnf.getAlphabet().getName();
-			fila[1] = bnf.getAlphabet()	;
+			fila[1] = bnf.getAlphabet();
 			modelAlfabeto.addRow(fila);
 		} else {
 			Map<String, Alfabeto> alfabetos = new HashMap<String, Alfabeto>();
@@ -159,7 +159,7 @@ public class PanelOutput extends JPanel {
 				} else {
 					String este = (String) tableExpr.getValueAt(fila, 0);
 					ProduccionBNF producion = bnf.getProduccion(este);
-					AFN pre=bnf.processProduction(producion);
+					AFN pre = bnf.processProduction(producion);
 					System.out.println(pre.toString());
 					pre.paint();
 					AFD sub = pre.generateAFD();
@@ -208,47 +208,66 @@ public class PanelOutput extends JPanel {
 		panelGrafico.add(bsimular);
 
 	}
-	
+
 	public void simulate(ActionEvent e) throws AnalizadorLexicoException {
-			
-			int fila = tableExpr.getSelectedRow();
-			int filas = tableExpr.getRowCount();
-			if (filas == 0) {
-				JOptionPane.showMessageDialog(null, "La tabla esta vacia", "Error", JOptionPane.ERROR_MESSAGE);
-			} else if (tableExpr.getSelectedRow() == -1) {
-				JOptionPane.showMessageDialog(null, "Seleccione una fila","Error", JOptionPane.ERROR_MESSAGE);
+
+		int fila = tableExpr.getSelectedRow();
+		int filas = tableExpr.getRowCount();
+		if (filas == 0) {
+			JOptionPane.showMessageDialog(null, "La tabla esta vacia", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else if (tableExpr.getSelectedRow() == -1) {
+			JOptionPane.showMessageDialog(null, "Seleccione una fila", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+			String este = (String) tableExpr.getValueAt(fila, 0);
+			ProduccionBNF producion = bnf.getProduccion(este);
+			AFN pre;
+			pre = bnf.processProduction(producion);
+			System.out.println(pre.toString());
+			AFD sub = pre.generateAFD();
+			AFD min = sub.minimizar();
+			String nv = (String) (JOptionPane
+					.showInputDialog("Ingrese la cadena: "));
+			if (nv == "" | nv == null) {
+				JOptionPane.showMessageDialog(null,
+						"Debe escribir una cadena.", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			} else {
-				String este = (String) tableExpr.getValueAt(fila,0);
-				ProduccionBNF producion = bnf.getProduccion(este);
-				AFN pre;
-				pre = bnf.processProduction(producion);
-				System.out.println(pre.toString());
-				AFD sub = pre.generateAFD();
-				AFD min = sub.minimizar();
-		        String nv = (String)(JOptionPane.showInputDialog("Ingrese la cadena: "));
-                if (nv == "" | nv == null){
-                	JOptionPane.showMessageDialog(null, "Debe escribir una cadena.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else{
-                	
-                	String[] val = new String[nv.length()];
-                	for (int i=0; i<nv.length();i++){
-                		val[i] = Character.toString(nv.charAt(i));
-                	}
-                	GraphicHelper graphicHelper = new GraphicHelper();
-            		int stateActual = min.getInitMin();
-            		stateActual = graphicHelper.simulate(min, val[0], stateActual);
-                	final PanelSimulation proc = new PanelSimulation(min, val);
-                	proc.setVisible(true);
-					proc.bvolver.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent evt) {
-							proc.setVisible(false);
-							
-						}
-					});
-                }
-				
+
+				String[] val = new String[nv.length()];
+				for (int i = 0; i < nv.length(); i++) {
+					val[i] = String.valueOf(nv.charAt(i));
+				}
+				GraphicHelper graphicHelper = new GraphicHelper();
+				int stateActual = min.getInitMin();
+				// Si no tiene estado inicial
+				if (stateActual == -1) {
+					stateActual = 0;
+				}
+				stateActual = graphicHelper.simulate(min, val[0], stateActual);
+				final PanelSimulation proc = new PanelSimulation(min, val,
+						stateActual);
+				if (stateActual == -1) {
+					System.out.println("Cadena no valida");
+					JOptionPane.showMessageDialog(null, "Cadena no valida.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					proc.bnext.setEnabled(false);
+				} else {
+
+					proc.setVisible(true);
+					proc.batras
+							.addActionListener(new java.awt.event.ActionListener() {
+								public void actionPerformed(
+										java.awt.event.ActionEvent evt) {
+									proc.setVisible(false);
+
+								}
+							});
+				}
 			}
+
+		}
 	}
 
 	private javax.swing.JButton bsimular;
