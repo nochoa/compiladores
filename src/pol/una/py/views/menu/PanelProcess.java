@@ -142,6 +142,7 @@ public class PanelProcess extends javax.swing.JFrame {
         jTabbedPane1.addTab("AFN", panelafn);
         
         AFD sub = automata.generateAFD();
+        sub.paint();
 		
         tableAFD.setModel(new javax.swing.table.DefaultTableModel(
 				new Object[][] {}, new String[] { "Estado", "Transiciones" }) {

@@ -156,8 +156,7 @@ public class PanelOutput extends JPanel {
 				} else {
 					String este = (String) tableExpr.getValueAt(fila, 0);
 					ProduccionBNF producion = bnf.getProduccion(este);
-					AFN pre;
-					pre = bnf.processProduction(producion);
+					AFN pre=bnf.processProduction(producion);
 					System.out.println(pre.toString());
 					pre.paint();
 					AFD sub = pre.generateAFD();
