@@ -384,7 +384,7 @@ public class PanelProcess extends javax.swing.JFrame {
 
 	}
 
-	private final static String PATH = "/home/deysinalec/Documentos/graphviz/";
+	private final static String PATH = "/home/nochoa/Documentos/desarrollo/graphviz/";
 	private final static String PNG = ".png";
     
 }

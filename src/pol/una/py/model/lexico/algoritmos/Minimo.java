@@ -49,8 +49,13 @@ public class Minimo {
 	public AFD build() {
 		// Lista de conjuntos inicial
 		List<Conjunto> init = new ArrayList<Conjunto>();
-		init.add(new Conjunto(0, origin.getFinales()));
-		init.add(new Conjunto(1, origin.getNofinales()));
+
+		if (!origin.getFinales().isEmpty()) {
+			init.add(new Conjunto(0, origin.getFinales()));
+		}
+		if (!origin.getNofinales().isEmpty()) {
+			init.add(new Conjunto(1, origin.getNofinales()));
+		}
 
 		// Si existe el estado de error, el mismo es agregado de forma separada,
 		// en un tercer conjunto
@@ -58,7 +63,7 @@ public class Minimo {
 			init.add(new Conjunto(2, origin.getError()));
 		}
 
-		List<Conjunto> next = new ArrayList<>();
+		List<Conjunto> next = new ArrayList<Conjunto>();
 
 		boolean process = true;
 		resetIndex(init);
@@ -376,7 +381,7 @@ public class Minimo {
 		 */
 		public boolean isInit() {
 			for (Estado state : states) {
-				if (state.getValue() == 0) {
+				if (state.isInit()) {
 					return true;
 				}
 			}

@@ -291,6 +291,12 @@ public class Subconjunto {
 			}
 			automata.addEstado(origen);
 		}
+		// Puede darse el caso de que el estado inicial del AFN no sea mas un
+		// estado inicial, sino un estado de aceptacion. Si no es un estado de
+		// aceptacion, indicamos que es el estado inicial.
+		if (!automata.getInitState().isAcceptation()) {
+			automata.getInitState().setInit(true);
+		}
 		return automata;
 	}
 

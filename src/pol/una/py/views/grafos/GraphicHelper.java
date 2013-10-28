@@ -259,20 +259,21 @@ public class GraphicHelper {
 	}
 
 	/**
-	 * Obtiene el estado inicial del automata, esto es debido a que si es un AFD
-	 * minimo o una simulacion(que se hace sobre el AFD minimo) el estado con
-	 * valor <b>0</b> no necesariamente es el estado inicial como en el AFN o
-	 * AFD sin optimizacion.
+	 * Obtiene el estado inicial del automata, esto es debido a que si es un
+	 * AFD, ADF minimo o una simulacion(que se hace sobre el AFD minimo) el
+	 * estado con valor <b>0</b> no necesariamente es el estado inicial como en
+	 * el AFN.
 	 * 
 	 * @param automata
 	 * @param type
 	 * @return
 	 */
 	private int getInitState(AF automata, String type) {
-		if (type.equals("MIN") || type.equals("SIMULATE")) {
-			return ((AFD) automata).getInitMin();
-		} else {
+		if (type.equals("AFN")) {
 			return automata.getInitState().getValue();
+
+		} else {
+			return ((AFD) automata).getInitMin();
 		}
 	}
 
