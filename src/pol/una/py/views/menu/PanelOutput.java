@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +21,7 @@ import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Alfabeto;
 import pol.una.py.model.lexico.BNF;
 import pol.una.py.model.lexico.ProduccionBNF;
+import pol.una.py.views.grafos.GraphicHelper;
 
 /**
  * Representa la vista donde se visualizan los datos ingresados por el usuario
@@ -162,7 +165,7 @@ public class PanelOutput extends JPanel {
 		bsimular.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				try {
-					probando(evt);
+					simulate(evt);
 				} catch (AnalizadorLexicoException e) {
 					e.printStackTrace();
 				}
@@ -173,27 +176,48 @@ public class PanelOutput extends JPanel {
 		
 	}
 	
-	public void probando(ActionEvent e) throws AnalizadorLexicoException {
-		
-//		new PanelProcess().setVisible(true);
-//		this.setVisible(false);
-//		this.panelBNF.setVisible(false);
-//		MenuOutput menuOutput = new MenuOutput();
-//		System.out.println(bnf.toString());
-//		menuOutput.build();
-//		for (AFN afn : bnf.process()) {
-//			System.out.println(afn.toString());
-//			afn.paint();
-//			Subconjunto subconjunto = new Subconjunto();
-//			for (Cerradura cerradura : subconjunto.build(afn).getCerraduras()) {
-//				System.out.println(cerradura.toString());
-//			}
-//
-//		}
-		
-
-
+	public void simulate(ActionEvent e) throws AnalizadorLexicoException {
+			
+			int fila = tableExpr.getSelectedRow();
+			int filas = tableExpr.getRowCount();
+			if (filas == 0) {
+				JOptionPane.showMessageDialog(null, "La tabla esta vacia", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (tableExpr.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(null, "Seleccione una fila","Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				String este = (String) tableExpr.getValueAt(fila,0);
+				ProduccionBNF producion = bnf.getProduccion(este);
+				AFN pre;
+				pre = bnf.processProduction(producion);
+				System.out.println(pre.toString());
+				AFD sub = pre.generateAFD();
+				AFD min = sub.minimizar();
+		        String nv = (String)(JOptionPane.showInputDialog("Ingrese la cadena: "));
+                if (nv == "" | nv == null){
+                	JOptionPane.showMessageDialog(null, "Debe escribir una cadena.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                else{
+                	
+                	String[] val = new String[nv.length()];
+                	for (int i=0; i<nv.length();i++){
+                		val[i] = Character.toString(nv.charAt(i));
+                	}
+                	GraphicHelper graphicHelper = new GraphicHelper();
+            		int stateActual = min.getInitMin();
+            		stateActual = graphicHelper.simulate(min, val[0], stateActual);
+                	final PanelSimulation proc = new PanelSimulation(min, val);
+                	proc.setVisible(true);
+					proc.bvolver.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent evt) {
+							proc.setVisible(false);
+							
+						}
+					});
+                }
+				
+			}
 	}
+
 	private javax.swing.JButton bsimular;
 	
 	private javax.swing.JScrollPane jScrollPane1;
