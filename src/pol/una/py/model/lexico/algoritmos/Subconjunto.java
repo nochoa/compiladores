@@ -315,6 +315,7 @@ public class Subconjunto {
 		if (!automata.containState(cerradura.getValue())) {
 			state = new Estado(cerradura.getValue());
 			state.setAcceptation(cerradura.isAcceptation());
+			state.setInit(cerradura.isInit());
 		} else {
 			// Si el estado ya esta en el automata
 			state = automata.getState(cerradura.getValue());

@@ -1,16 +1,13 @@
 package pol.una.py.views.menu;
 
-import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import pol.una.py.model.automatas.AFD;
@@ -19,7 +16,6 @@ import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Transicion;
 import pol.una.py.model.lexico.BNF;
 import pol.una.py.model.lexico.CodeGenerator;
-import pol.una.py.views.grafos.JPanelConFondo;
 
 public class PanelProcess extends javax.swing.JFrame {
 	/**
@@ -52,9 +48,19 @@ public class PanelProcess extends javax.swing.JFrame {
 		// ((JPanelConFondo)
 		// grafoafn).setImagen("/home/deysinalec/Documentos/graphviz/kAFN.png");
 
-		ImageIcon image = new ImageIcon(pathPng);
-		JLabel picLabel = new JLabel(image);
-		grafoafn.add(picLabel);
+//		BufferedImage myPicture;
+//		try {
+//			myPicture = ImageIO.read(new File(pathPng));
+//			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+//			grafoafn.add(picLabel);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
+		 ImageIcon image = new ImageIcon(pathPng);
+		 JLabel picLabel = new JLabel(image);
+		 grafoafn.add(picLabel);
 
 		// JScrollPane scroll2 = new JScrollPane(grafoafn);
 		// grafoafn.setAutoscrolls(true);

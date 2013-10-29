@@ -77,6 +77,22 @@ public class Cerradura {
 		return false;
 	}
 
+	/**
+	 * Verifica si la cerradura es el estado inicial, esto es, si al menos uno
+	 * de los estados alcanzables es el estado inicial.
+	 * 
+	 * @return <b>true</b> Si es un estado inicial.</br> <b> false</b> Caso
+	 *         contrario.
+	 */
+	public boolean isInit() {
+		for (Estado state : estadosAcanzables) {
+			if (state.getValue() == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public List<Estado> getConjunto() {
 		return conjunto;
 	}

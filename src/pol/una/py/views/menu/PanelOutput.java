@@ -26,7 +26,7 @@ import pol.una.py.views.grafos.GraphicHelper;
  * Representa la vista donde se visualizan los datos ingresados por el usuario
  * ademas de la salida del traductor
  * 
- * @author Nathalia Ochoa
+ * @author Deysi Leguizamon
  * @since 1.0
  * @version 1.0 Set 28, 2013
  * 
@@ -192,20 +192,20 @@ public class PanelOutput extends JPanel {
 
 		panelGrafico.add(bproc);
 
-//		bsimular = new javax.swing.JButton(SIMULAR);
-//		bsimular.setBounds(10, 25, 120, 30);
-//
-//		// ///LIstener del boton Simular
-//		bsimular.addActionListener(new java.awt.event.ActionListener() {
-//			public void actionPerformed(java.awt.event.ActionEvent evt) {
-//				try {
-//					simulate(evt);
-//				} catch (AnalizadorLexicoException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//		panelGrafico.add(bsimular);
+		bsimular = new javax.swing.JButton(SIMULAR);
+		bsimular.setBounds(10, 25, 120, 30);
+
+		// ///LIstener del boton Simular
+		bsimular.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				try {
+					simulate(evt);
+				} catch (AnalizadorLexicoException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		panelGrafico.add(bsimular);
 
 	}
 

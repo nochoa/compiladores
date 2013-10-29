@@ -10,6 +10,7 @@ import java.util.List;
 
 import pol.una.py.model.automatas.AF;
 import pol.una.py.model.automatas.AFD;
+import pol.una.py.model.automatas.AFN;
 import pol.una.py.model.base.Estado;
 import pol.una.py.model.base.Extension;
 import pol.una.py.model.base.Transicion;
@@ -148,10 +149,12 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private int getInitState() {
-		if (automata instanceof AFD) {
-			return ((AFD) automata).getInitMin();
-		} else {
+
+		if (automata instanceof AFN) {
 			return automata.getInitState().getValue();
+
+		} else {
+			return ((AFD) automata).getInitMin();
 		}
 	}
 
